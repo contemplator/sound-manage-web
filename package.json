@@ -1,11 +1,11 @@
 {
-  "name": "angular-template",
-  "version": "6.0.0",
+  "name": "sound-manage",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod --base-href=./",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -23,7 +23,9 @@
     "@angular/platform-server": "^6.0.3",
     "@angular/router": "^6.0.3",
     "core-js": "^2.4.1",
+    "date-extension": "git+https://github.com/contemplator/typescript-extension.git",
     "font-awesome": "^4.7.0",
+    "normalize.css": "^8.0.0",
     "primeng": "^6.0.0-alpha.1",
     "rxjs": "^6.2.0"
   },

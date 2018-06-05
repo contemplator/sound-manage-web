@@ -1,0 +1,35 @@
+.header {
+  border-bottom: 1px solid gray;
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 60px;
+    max-width: 960px;
+    margin: 0px auto;
+    padding-bottom: 6px;
+    .title h1 {
+      margin: 0;
+    }
+  }
+}
+
+.navigation {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  align-self: flex-end;
+  .navigation-link {
+    .navigation-divider {
+      margin: 0 6px;
+    }
+    &:last-child .navigation-divider {
+      display: none;
+    }
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 12px auto;
+}

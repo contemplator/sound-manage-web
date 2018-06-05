@@ -1,3 +1,17 @@
-<h1>
-  {{title}}
-</h1>
+<div class="header">
+  <div class="header-content">
+    <div class="title">
+      <h1>Woolito 音效素材管理</h1>
+    </div>
+    <div class="navigation">
+      <div class="navigation-link" *ngFor="let link of navigationLinks">
+        <a [routerLink]="link.url">{{ link.label }}</a>
+        <span class="navigation-divider">|</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <router-outlet></router-outlet>
+</div>

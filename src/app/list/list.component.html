@@ -1,0 +1,27 @@
+<p-table [value]="soundList" [paginator]="true" [rows]="20">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>檔名</th>
+      <th>ID</th>
+      <th [pSortableColumn]="'server_modified'">
+        最後修改時間
+        <p-sortIcon [field]="'server_modified'"></p-sortIcon>
+      </th>
+      <th>標籤</th>
+      <th>下載</th>
+      <th>音源預覽</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-sound>
+    <tr>
+      <td>{{sound.name}}</td>
+      <td>{{sound.id}}</td>
+      <td>{{showDatetime(sound.modifyDatetime)}}</td>
+      <td>
+        <p-chips [(ngModel)]="sound.tagsClouds" (onAdd)="onTagsAdd($event, sound)" (onRemove)="onTagsRemove($event, sound)"></p-chips>
+      </td>
+      <td>{{sound.url}}</td>
+      <td>TBD</td>
+    </tr>
+  </ng-template>
+</p-table>
