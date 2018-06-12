@@ -30,7 +30,6 @@ export class Sound {
   }
 
   parseFromDatabase(json: any) {
-    console.log(json);
     this.id = json.soundId;
     this.name = json.name;
     this.url = json.url;

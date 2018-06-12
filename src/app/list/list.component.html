@@ -2,7 +2,7 @@
   <ng-template pTemplate="header">
     <tr>
       <th>檔名</th>
-      <th>ID</th>
+      <!-- <th>ID</th> -->
       <th [pSortableColumn]="'server_modified'">
         最後修改時間
         <p-sortIcon [field]="'server_modified'"></p-sortIcon>
@@ -15,7 +15,7 @@
   <ng-template pTemplate="body" let-sound>
     <tr>
       <td>{{sound.name}}</td>
-      <td>{{sound.id}}</td>
+      <!-- <td>{{sound.id}}</td> -->
       <td>{{showDatetime(sound.modifyDatetime)}}</td>
       <td>
         <p-chips [(ngModel)]="sound.tagsClouds" (onAdd)="onTagsAdd($event, sound)" (onRemove)="onTagsRemove($event, sound)"></p-chips>

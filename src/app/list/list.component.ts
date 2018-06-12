@@ -21,7 +21,9 @@ export class ListComponent implements OnInit {
   }
 
   fetchSource(): void {
-    const dropboxObservable = this.service.fetchDropboxFolder();
+    const folderPath = '/0_Woolito Animation Team Folder/resource/音效/人、動物';
+    const decodePath = encodeURIComponent(folderPath);
+    const dropboxObservable = this.service.fetchDropboxFolder(decodePath);
     const databaseObservable = this.service.fetchDbSounds();
     const result = dropboxObservable.pipe(combineLatest(databaseObservable, (dbox, dbase) => {
       return {
@@ -29,17 +31,39 @@ export class ListComponent implements OnInit {
         database: dbase
       };
     })).subscribe(res => {
-      const dropbox = res.dropbox.map(item => (new Sound()).parseFromDropbox(item));
-      const database = res.database.map(item => (new Sound()).parseFromDatabase(item));
+      const databaseList = res.database.map(item => (new Sound()).parseFromDatabase(item));
+      let dropboxList = [];
+      res.dropbox.forEach(item => {
+        if (Array.isArray(item)) {
+          const list = this.parseFolderToFiles(item);
+          dropboxList = [...dropboxList, ...list];
+        } else {
+          dropboxList = [...dropboxList, item];
+        }
+      });
+      dropboxList = dropboxList.map(item=>(new Sound()).parseFromDropbox(item));
 
-      console.log(dropbox, database);
-      const arr = [...database, ...dropbox];
+      const arr = [...databaseList, ...dropboxList];
       this.soundList = arr.filter((item, index, arr) => arr.findIndex(s => s.id === item.id) === index);
-      console.log(this.soundList);
+
     });
   }
 
+  parseFolderToFiles(list: any[]): any[] {
+    let result = [];
+    list.forEach(item => {
+      if (Array.isArray(item)) {
+        let tempList = this.parseFolderToFiles(item);
+        result = [...result, ...tempList];
+      } else {
+        result.push(item);
+      }
+    });
+    return result;
+  }
+
   showDatetime(datetime: Date): string {
+    if (!datetime) { return ''; }
     return datetime.toFormatString('YYYY/MM/DD hh:mm:ss');
   }
 

@@ -6,18 +6,18 @@ import { Sound } from 'viewmodels/sound';
 
 @Injectable()
 export class AppService {
-  host = '../sound-manage-serve/';
+  host = '../sound-manage-server/';
 
   constructor(
     private httpClient: HttpClient
   ) {
     if (isDevMode()) {
-      this.host = 'http://localhost:3000/';
+      this.host = '/sound-manage-server/';
     }
   }
 
-  fetchDropboxFolder(): Observable<Sound[]> {
-    return this.httpClient.get<Sound[]>(`${this.host}dropbox/list/素材管理`);
+  fetchDropboxFolder(folder: string): Observable<Sound[]> {
+    return this.httpClient.get<Sound[]>(`${this.host}dropbox/listAll/${folder}`);
   }
 
   fetchDbSounds(): Observable<Sound[]> {
