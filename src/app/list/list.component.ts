@@ -48,6 +48,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         database: dbase
       };
     })).subscribe(res => {
+      if (!res.database) { res.database = []; }
       const databaseList = res.database.map(item => (new Sound()).parseFromDatabase(item));
       let dropboxList = [];
       res.dropbox.forEach(item => {
@@ -135,8 +136,8 @@ export class ListComponent implements OnInit, AfterViewInit {
   }
 
   fetchTagsList(): void {
-    this.service.fetchTags().subscribe(res=>{
-      this.tagList = res.map(item=>item.name);
+    this.service.fetchTags().subscribe(res => {
+      this.tagList = res.map(item => item.name);
     });
     // this.tagList = this.soundList.reduce((pre, cur) => {
     //   return [...pre, ...cur.tagsClouds];
