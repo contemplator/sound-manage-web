@@ -9,4 +9,12 @@
   ::ng-deep .ui-table table{
     table-layout: auto;
   }
+
+  ::ng-deep tbody td:nth-child(1){
+    overflow: hidden;
+  }
+
+  ::ng-deep tbody td:nth-child(5) img{
+    width: 480px;
+  }
 }

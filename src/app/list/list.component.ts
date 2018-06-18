@@ -1,40 +1,31 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AppService } from '../app.service';
 import { Sound } from 'viewmodels/sound';
-import { Observable } from 'rxjs';
-import { combineLatest, map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/operators';
 import * as WaveSurfer from 'wavesurfer.js';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements OnInit, AfterViewInit {
+export class ListComponent implements OnInit {
   soundList = [];
   filtedSoundList = [];
   tagList = [];
   filtedTagList = [];
   keyword = '';
+  wavesurfer: any;
 
   constructor(
-    private service: AppService
+    private service: AppService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
     this.fetchSource();
     this.fetchTagsList();
-  }
-
-  ngAfterViewInit(): void {
-    requestAnimationFrame(() => {
-      const wavesurfer = WaveSurfer.create({
-        container: '#waveform',
-        waveColor: 'violet',
-        progressColor: 'purple'
-      });
-      wavesurfer.load('https://www.dropbox.com/s/7u27ef92mw81m2b/Pokeman.mp3?dl=0');
-    });
   }
 
   fetchSource(): void {
@@ -64,6 +55,7 @@ export class ListComponent implements OnInit, AfterViewInit {
       const arr = [...databaseList, ...dropboxList];
       this.soundList = arr.filter((item, index, arr) => arr.findIndex(s => s.id === item.id) === index);
       this.filtedSoundList = this.soundList;
+      console.log(this.soundList);
     });
   }
 
@@ -85,7 +77,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     return datetime.toFormatString('YYYY/MM/DD hh:mm:ss');
   }
 
-  onTagsAdd(event, sound: Sound): void {
+  onTagsAdd(sound: Sound): void {
     this.service.updateSound(sound).subscribe(res => {
       console.info(res);
     });
@@ -137,21 +129,12 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   fetchTagsList(): void {
     this.service.fetchTags().subscribe(res => {
-      if(res){
+      if (res) {
         this.tagList = res.map(item => item.name);
-      }else{
+      } else {
         this.tagList = [];
       }
-
     });
-    // this.tagList = this.soundList.reduce((pre, cur) => {
-    //   return [...pre, ...cur.tagsClouds];
-    // }, []);
-
-    // this.tagList = this.tagList.filter((item: string, index: number, arr: string[]) => {
-    //   const fi = arr.indexOf(item);
-    //   return index === fi ? true : false;
-    // });
   }
 
   filterTag(event): void {
@@ -160,5 +143,77 @@ export class ListComponent implements OnInit, AfterViewInit {
       const index = item.toUpperCase().indexOf(keyword);
       return index > -1 ? true : false;
     });
+  }
+
+  updateVoiceGraph(event: any, sound: Sound): void {
+    this.service.fetchDownloadLink(sound.url).subscribe(res => {
+      const target = event.target.parentNode.parentNode;
+      target.innerHTML = '';
+      const element = window.document.createElement('div');
+      element.setAttribute('id', sound.id);
+      target.appendChild(element);
+
+      sound.wave = WaveSurfer.create({
+        container: '#' + sound.id,
+        waveColor: 'violet',
+        progressColor: 'purple'
+      });
+
+      sound.wave.on('ready', () => {
+        const waveElement = target.childNodes[0].childNodes[0];
+        setTimeout(() => {
+          const canvas = waveElement.querySelectorAll('canvas')[0];
+          if (canvas.getContext) {
+            var image = canvas.toDataURL("image/png");
+            sound.graph = image;
+            this.service.updateSound(sound).subscribe(res => {
+            });
+          }
+        }, 300);
+
+      });
+
+      sound.wave.load(res);
+    });
+  }
+
+  generateGraph(sound): void {
+    this.service.fetchDownloadLink(sound.url).subscribe(res => {
+      console.log(res);
+      const target = document.body;
+      const element = window.document.createElement('div');
+      element.setAttribute('id', sound.id);
+      target.appendChild(element);
+
+      sound.wave = WaveSurfer.create({
+        container: '#' + sound.id,
+        waveColor: 'violet',
+        progressColor: 'purple'
+      });
+
+      sound.wave.on('ready', () => {
+        const waveElement = document.body.querySelector('#' + sound.id);
+        setTimeout(() => {
+          const canvas = waveElement.querySelectorAll('canvas')[0];
+          if (canvas.getContext) {
+            var image = canvas.toDataURL("image/png");
+            sound.graph = image;
+            sound.wave = null
+            this.service.updateSound(sound).subscribe(res2 => {
+              console.log(res2);
+            }, error=>{
+              console.log(error, sound)
+            });
+          }
+        }, 300);
+
+      });
+
+      sound.wave.load(res);
+    });
+  }
+
+  safeResource(resource: string): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(resource);
   }
 }

@@ -26,7 +26,7 @@ export class AppService {
   }
 
   updateSound(sound: Sound): Observable<Sound> {
-    sound.tags = sound.tagsClouds.join(',');
+    sound.tags = sound.tagsClouds.length > 0 ? sound.tagsClouds.join(','): '';
     return this.httpClient.post<Sound>(`${this.host}sound/set`, sound);
   }
 

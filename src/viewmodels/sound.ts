@@ -1,3 +1,5 @@
+import * as WaveSurfer from 'wavesurfer.js';
+
 export class Sound {
   id: string;
   name: string;
@@ -6,6 +8,7 @@ export class Sound {
   tags: string;
   tagsClouds: string[];
   graph: any;
+  wave: any;
 
   constructor() {
     this.id = '';
@@ -18,7 +21,6 @@ export class Sound {
   }
 
   parseFromDropbox(json: any) {
-    // console.log(json);
     this.id = json.id.slice(3);
     this.name = json.name;
     this.url = json.path_display;
@@ -34,9 +36,9 @@ export class Sound {
     this.name = json.name;
     this.url = json.url;
     this.modifyDatetime = new Date(json.modifyDatetime);
-    this.tags = json.tags;
-    this.tagsClouds = this.tags.split(',');
-    this.graph = null;
+    this.tags = json.tags ? json.tags : '';
+    this.tagsClouds = this.tags.length > 0 ? this.tags.split(','): [];
+    this.graph = json.graph;
     return this;
   }
 }
