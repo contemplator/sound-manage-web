@@ -12,12 +12,14 @@ import { AppService } from './app.service';
 import { TableModule } from 'primeng/table';
 import { ListComponent } from './list/list.component';
 
-import { ChipsModule } from 'primeng/primeng';
+import { ChipsModule, InputTextModule, ButtonModule, SharedModule } from 'primeng/primeng';
+import { TagAutocompleteComponent } from './tag-autocomplete/tag-autocomplete.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ListComponent
+    ListComponent,
+    TagAutocompleteComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +28,10 @@ import { ChipsModule } from 'primeng/primeng';
     AppRoutingModule,
     HttpClientModule,
     TableModule,
-    ChipsModule
+    ChipsModule,
+    InputTextModule,
+    ButtonModule,
+    SharedModule
   ],
   providers: [AppService],
   bootstrap: [AppComponent]

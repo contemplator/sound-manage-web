@@ -1,8 +1,9 @@
 import { Injectable, isDevMode } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { catchError, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Sound } from 'viewmodels/sound';
+import { Tag } from 'viewmodels/tag';
 
 @Injectable()
 export class AppService {
@@ -27,5 +28,24 @@ export class AppService {
   updateSound(sound: Sound): Observable<Sound> {
     sound.tags = sound.tagsClouds.join(',');
     return this.httpClient.post<Sound>(`${this.host}sound/set`, sound);
+  }
+
+  fetchDownloadLink(url: string): Observable<any>{
+    const data = {
+      url: url
+    };
+    return this.httpClient.post<any>(`${this.host}dropbox/fetchDownloadLink`, data);
+  }
+
+  deleteTag(soundId: string, tag: string): Observable<boolean>{
+    const data = {
+      soundId: soundId,
+      tag: tag
+    };
+    return this.httpClient.post<boolean>(`${this.host}sound/deleteTag`, data);
+  }
+
+  fetchTags(): Observable<Tag[]>{
+    return this.httpClient.get<Tag[]>(`${this.host}sound/fetchTags`);
   }
 }

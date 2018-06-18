@@ -2,3 +2,15 @@
 * {
   box-sizing: border-box;
 }
+
+.ui-chips>ul.ui-inputtext{
+  padding: 0;
+}
+
+.ui-chips-token{
+  margin: .125em;
+}
+
+.ui-chips-input-token{
+  margin: 0;
+}

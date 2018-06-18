@@ -29,7 +29,8 @@
     "font-awesome": "^4.7.0",
     "normalize.css": "^8.0.0",
     "primeng": "^6.0.0-alpha.1",
-    "rxjs": "^6.2.0"
+    "rxjs": "^6.2.0",
+    "wavesurfer.js": "^2.0.5"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.6.5",

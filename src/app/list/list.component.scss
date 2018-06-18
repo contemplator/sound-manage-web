@@ -1,0 +1,12 @@
+.search-box{
+  line-height: 40px;
+  label span{
+    margin-right: 8px;
+  }
+}
+
+.file-table{
+  ::ng-deep .ui-table table{
+    table-layout: auto;
+  }
+}
