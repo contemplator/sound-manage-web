@@ -137,7 +137,12 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   fetchTagsList(): void {
     this.service.fetchTags().subscribe(res => {
-      this.tagList = res.map(item => item.name);
+      if(res){
+        this.tagList = res.map(item => item.name);
+      }else{
+        this.tagList = [];
+      }
+
     });
     // this.tagList = this.soundList.reduce((pre, cur) => {
     //   return [...pre, ...cur.tagsClouds];
