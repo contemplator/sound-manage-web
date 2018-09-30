@@ -13,7 +13,7 @@ export class AppService {
     private httpClient: HttpClient
   ) {
     if (isDevMode()) {
-      this.host = '/sound-manage-server/';
+      this.host = 'http://localhost:3000/sound-manage-server/';
     }
   }
 

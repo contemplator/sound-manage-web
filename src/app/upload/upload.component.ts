@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { AppService } from '../app.service';
 import { MessageService } from 'primeng/primeng';
 import * as WaveSurfer from 'wavesurfer.js';
@@ -12,7 +12,8 @@ export class UploadComponent implements OnInit {
 
   constructor(
     private service: AppService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private zone: NgZone
   ) { }
 
   ngOnInit() {
@@ -53,7 +54,9 @@ export class UploadComponent implements OnInit {
               sound.graph = image;
               this.service.updateSound(sound).subscribe(res => {
                 waveElement.innerHTML = '';
-                this.messageService.add({ severity: 'success', summary: 'Success Message', detail: '已上傳至 Dropbox 並更新音波圖' });
+                this.zone.run(()=>{
+                  this.messageService.add({ severity: 'success', summary: 'Success Message', detail: '已上傳至 Dropbox 並更新音波圖' });
+                });
               });
             }
           }, 300);
