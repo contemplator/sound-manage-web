@@ -9,6 +9,8 @@ export class Sound {
   tagsClouds: string[];
   graph: any;
   wave: any;
+  isPause: boolean;
+  isFinish: boolean;
 
   constructor() {
     this.id = '';

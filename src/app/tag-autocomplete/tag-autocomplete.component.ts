@@ -456,7 +456,10 @@ export class TagAutocompleteComponent implements AfterViewInit, AfterViewChecked
     } else {
       if (event.which === 40 && this.suggestions) {
         this.search(event, event.target.value);
-      }else if(event.which === 13 && this.suggestions.length <= 0){
+      } else if (event.which === 13 && !this.suggestions) {
+        const value = this.multiInputEL.nativeElement.value;
+        this.selectItem(value);
+      } else if (event.which === 13 && this.suggestions.length <= 0) {
         const value = this.multiInputEL.nativeElement.value;
         this.selectItem(value);
       }

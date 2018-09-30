@@ -26,18 +26,18 @@ export class AppService {
   }
 
   updateSound(sound: Sound): Observable<Sound> {
-    sound.tags = sound.tagsClouds.length > 0 ? sound.tagsClouds.join(','): '';
+    sound.tags = sound.tagsClouds.length > 0 ? sound.tagsClouds.join(',') : '';
     return this.httpClient.post<Sound>(`${this.host}sound/set`, sound);
   }
 
-  fetchDownloadLink(url: string): Observable<any>{
+  fetchDownloadLink(id: string): Observable<any> {
     const data = {
-      url: url
+      url: 'id:' + id
     };
     return this.httpClient.post<any>(`${this.host}dropbox/fetchDownloadLink`, data);
   }
 
-  deleteTag(soundId: string, tag: string): Observable<boolean>{
+  deleteTag(soundId: string, tag: string): Observable<boolean> {
     const data = {
       soundId: soundId,
       tag: tag
@@ -45,7 +45,12 @@ export class AppService {
     return this.httpClient.post<boolean>(`${this.host}sound/deleteTag`, data);
   }
 
-  fetchTags(): Observable<Tag[]>{
+  fetchTags(): Observable<Tag[]> {
     return this.httpClient.get<Tag[]>(`${this.host}sound/fetchTags`);
+  }
+
+  uploadFiles(formData): Observable<any> {
+    console.log(formData);
+    return this.httpClient.post('http://localhost:3000/sound-manage-server/sound/uploadImage', formData);
   }
 }

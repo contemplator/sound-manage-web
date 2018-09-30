@@ -15,6 +15,13 @@
   }
 
   ::ng-deep tbody td:nth-child(5) img{
-    width: 480px;
+    width: calc(480px - 1em);
+  }
+}
+
+.graph-container{
+  position: relative;
+  .btn-update{
+    margin-right: 8px;
   }
 }

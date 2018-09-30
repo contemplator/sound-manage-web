@@ -10,14 +10,16 @@ import { AppService } from './app.service';
 import { TableModule } from 'primeng/table';
 import { ListComponent } from './list/list.component';
 
-import { InputTextModule, ButtonModule, SharedModule } from 'primeng/primeng';
+import { InputTextModule, ButtonModule, SharedModule, FileUploadModule } from 'primeng/primeng';
 import { TagAutocompleteComponent } from './tag-autocomplete/tag-autocomplete.component';
+import { UploadComponent } from './upload/upload.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ListComponent,
-    TagAutocompleteComponent
+    TagAutocompleteComponent,
+    UploadComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +29,8 @@ import { TagAutocompleteComponent } from './tag-autocomplete/tag-autocomplete.co
     TableModule,
     InputTextModule,
     ButtonModule,
-    SharedModule
+    SharedModule,
+    FileUploadModule
   ],
   providers: [AppService],
   bootstrap: [AppComponent]

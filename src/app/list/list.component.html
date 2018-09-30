@@ -24,15 +24,26 @@
         <td [style.max-width]="'240px'" [style.min-width]="'240px'">{{sound.name}}</td>
         <td [style.max-width]="'136px'" [style.min-width]="'136px'">{{showDatetime(sound.modifyDatetime) | slice:0:10}}</td>
         <td>
-          <app-tag-autocomplete [(ngModel)]="sound.tagsClouds" [suggestions]="filtedTagList" (completeMethod)="filterTag($event)" placeholder="tag" [multiple]="true" (onSelect)="onTagsAdd(sound)" (onUnselect)="onTagsRemove($event, sound)" [inputStyle]="{'width': '100%'}">
+          <app-tag-autocomplete [(ngModel)]="sound.tagsClouds" [suggestions]="filtedTagList" (completeMethod)="filterTag($event)"
+            placeholder="tag" [multiple]="true" (onSelect)="onTagsAdd(sound)" (onUnselect)="onTagsRemove($event, sound)"
+            [inputStyle]="{'width': '100%'}">
           </app-tag-autocomplete>
         </td>
         <td [style.max-width]="'88px'" [style.min-width]="'88px'">
-          <button (click)="onDownloadClick(sound.url)" type="button" pButton label="下載"></button>
+          <button (click)="onDownloadClick(sound.id)" type="button" pButton label="下載"></button>
         </td>
         <td [style.max-width]="'480px'" [style.min-width]="'480px'">
-          <img *ngIf="sound.graph" [src]="safeResource(sound.graph)">
-          <button *ngIf="!sound.graph" (click)="updateVoiceGraph($event, sound)" type="button" pButton label="更新音波圖"></button>
+          <div class="graph-container">
+            <button class="btn btn-update" *ngIf="!sound.graph || sound.graph === 'null'" (click)="updateVoiceGraph($event, sound)"
+              type="button" pButton label="更新音波圖"></button>
+            <button class="btn btn-play" pButton label="播放" (click)="play($event, sound)" type="button" *ngIf="!sound.wave"></button>
+            <button class="btn btn-continue" pButton label="播放" (click)="playPause($event, sound)" type="button" *ngIf="sound.wave && sound.isPause && !sound.isFinish"></button>
+            <button class="btn btn-pause" pButton label="暫停" (click)="pause($event, sound)" type="button" *ngIf="sound.wave && !sound.isPause && !sound.isFinish"></button>
+            <button class="btn btn-again" pButton label="再一次" (click)="playAgain($event, sound)" type="button" *ngIf="sound.wave && sound.isFinish"></button>
+            <div [id]="'w' + sound.id">
+              <img *ngIf="sound.graph && sound.graph !== 'null'" [src]="safeResource(sound.graph)">
+            </div>
+          </div>
         </td>
       </tr>
     </ng-template>
