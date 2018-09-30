@@ -10,7 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "predeploy": "npm run build",
-    "deploy": "ssh root@www.idlefox.info 'rm -rf /var/www/sound-manage' && scp -r ./dist root@www.idlefox.info:/var/www/sound-manage"
+    "deploy": "ssh root@45.32.62.218 'rm -rf /var/www/sound-manage' && scp -r ./dist root@45.32.62.218:/var/www/sound-manage"
   },
   "private": true,
   "dependencies": {
