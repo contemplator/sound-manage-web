@@ -28,7 +28,8 @@
     "date-extension": "git+https://github.com/contemplator/typescript-extension.git",
     "font-awesome": "^4.7.0",
     "normalize.css": "^8.0.0",
-    "primeng": "^6.0.0-alpha.1",
+    "primeicons": "^1.0.0-beta.10",
+    "primeng": "^6.1.4",
     "rxjs": "^6.2.0",
     "wavesurfer.js": "^2.0.5"
   },

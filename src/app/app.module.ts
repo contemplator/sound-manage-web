@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -10,7 +11,8 @@ import { AppService } from './app.service';
 import { TableModule } from 'primeng/table';
 import { ListComponent } from './list/list.component';
 
-import { InputTextModule, ButtonModule, SharedModule, FileUploadModule } from 'primeng/primeng';
+import { InputTextModule, ButtonModule, SharedModule, FileUploadModule, MessageService } from 'primeng/primeng';
+import { ToastModule } from 'primeng/toast';
 import { TagAutocompleteComponent } from './tag-autocomplete/tag-autocomplete.component';
 import { UploadComponent } from './upload/upload.component';
 
@@ -23,6 +25,7 @@ import { UploadComponent } from './upload/upload.component';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
@@ -30,9 +33,13 @@ import { UploadComponent } from './upload/upload.component';
     InputTextModule,
     ButtonModule,
     SharedModule,
-    FileUploadModule
+    FileUploadModule,
+    ToastModule
   ],
-  providers: [AppService],
+  providers: [
+    AppService,
+    MessageService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

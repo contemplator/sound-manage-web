@@ -1,7 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { AppService } from '../app.service';
 import { Sound } from 'viewmodels/sound';
-import { combineLatest } from 'rxjs/operators';
 import * as WaveSurfer from 'wavesurfer.js';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
@@ -238,6 +237,7 @@ export class ListComponent implements OnInit {
   }
 
   /**
+   * 停用
    * 產生音波圖
    * @param sound 
    */

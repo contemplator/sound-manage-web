@@ -26,7 +26,10 @@ export class AppService {
   }
 
   updateSound(sound: Sound): Observable<Sound> {
-    sound.tags = sound.tagsClouds.length > 0 ? sound.tagsClouds.join(',') : '';
+    if(sound.tagsClouds){
+      sound.tags = sound.tagsClouds.length > 0 ? sound.tagsClouds.join(',') : '';
+    }
+    sound.wave = null;
     return this.httpClient.post<Sound>(`${this.host}sound/set`, sound);
   }
 
@@ -50,7 +53,6 @@ export class AppService {
   }
 
   uploadFiles(formData): Observable<any> {
-    console.log(formData);
-    return this.httpClient.post('http://localhost:3000/sound-manage-server/sound/uploadImage', formData);
+    return this.httpClient.post('http://localhost:3000/sound-manage-server/sound/uploadFile', formData);
   }
 }
