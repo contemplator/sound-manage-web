@@ -8,7 +8,6 @@ import { AppService } from './app.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'app works!';
   navigationLinks = [];
 
   constructor(
@@ -22,8 +21,8 @@ export class AppComponent implements OnInit {
   initNavigations(): void {
     this.navigationLinks = [
       new NavigationLink('List', 'list'),
-      new NavigationLink('Upload', 'upload'),
-      new NavigationLink('Edit', 'edit')
+      new NavigationLink('Upload', 'upload')
+      // new NavigationLink('Edit', 'edit')
     ];
   }
 }

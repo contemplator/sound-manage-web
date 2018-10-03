@@ -3,6 +3,8 @@
     <span>搜尋檔案標籤</span>
     <input type="text" [(ngModel)]="keyword" (ngModelChange)="onKeywordChange()" pInputText>
   </label>
+
+  <button class="btn-graph" (click)="updateAllGraph()" pButton label="更新所有音波圖"></button>
 </div>
 
 <div class="file-table">

@@ -1,27 +1,35 @@
-.search-box{
+.search-box {
   line-height: 40px;
-  label span{
+  label span {
     margin-right: 8px;
   }
 }
 
-.file-table{
-  ::ng-deep .ui-table table{
+.file-table {
+  ::ng-deep .ui-table table {
     table-layout: auto;
   }
 
-  ::ng-deep tbody td:nth-child(1){
+  ::ng-deep tbody td:nth-child(1) {
     overflow: hidden;
   }
 
-  ::ng-deep tbody td:nth-child(5) img{
+  ::ng-deep tbody td:nth-child(5) img {
     width: calc(480px - 1em);
+  }
+
+  ::ng-deep .ui-autocomplete.ui-autocomplete-multiple .ui-autocomplete-multiple-container .ui-autocomplete-token {
+    margin: 0.2em 0.286em 0 0;
   }
 }
 
-.graph-container{
+.graph-container {
   position: relative;
-  .btn-update{
+  .btn-update {
     margin-right: 8px;
   }
+}
+
+.btn-graph {
+  float: right;
 }

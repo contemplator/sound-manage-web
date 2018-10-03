@@ -206,12 +206,6 @@ export class ListComponent implements OnInit {
    */
   updateVoiceGraph(event: any, sound: Sound): void {
     this.service.fetchDownloadLink(sound.id).subscribe(res => {
-      // const target = event.target.parentNode.parentNode;
-      // target.innerHTML = '';
-      // const element = window.document.createElement('div');
-      // element.setAttribute('id', 'w' + sound.id);
-      // target.appendChild(element);
-
       sound.wave = WaveSurfer.create({
         container: '#w' + sound.id,
         waveColor: 'violet',
@@ -323,7 +317,7 @@ export class ListComponent implements OnInit {
       });
 
       sound.wave.on('finish', () => {
-        this.zone.run(()=>{
+        this.zone.run(() => {
           sound.isFinish = true;
         });
       });
@@ -346,5 +340,68 @@ export class ListComponent implements OnInit {
     sound.wave.play();
     sound.isPause = false;
     sound.isFinish = false;
+  }
+
+  async updateAllGraph(): Promise<void> {
+    const remSounds = this.soundList.filter(sound => !sound.graph || sound.graph === 'null');
+    for (let i = 0; i < remSounds.length; i++) {
+      const sound = remSounds[i];
+      try {
+        await this.uploadGraphBatch(sound);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
+
+  uploadGraphBatch(sound: Sound): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.service.fetchDownloadLink(sound.id).subscribe(res => {
+        if (sound.name.indexOf('.wav') === -1 && sound.name.indexOf('.mp3') === -1) {
+          console.error(sound.name, 'not type');
+          resolve();
+          return;
+        }
+        console.log(sound.name, sound.url, 'start');
+        const target = document.body.querySelector('#waveform');
+        target.innerHTML = '';
+        const element = window.document.createElement('div');
+        element.setAttribute('id', 'ws' + sound.id);
+        target.appendChild(element);
+
+        sound.wave = WaveSurfer.create({
+          container: '#ws' + sound.id,
+          waveColor: 'violet',
+          progressColor: 'purple'
+        });
+
+        sound.wave.on('ready', () => {
+          const waveElement = document.body.querySelector('#ws' + sound.id);
+          setTimeout(() => {
+            const canvas = waveElement.querySelectorAll('canvas')[0];
+            if (canvas.getContext) {
+              var image = canvas.toDataURL("image/png");
+              sound.graph = image;
+              this.service.updateSound(sound).subscribe(res => {
+                if (res) {
+                  console.log(sound.name + ' done');
+                  resolve();
+                }
+              }, error=>{
+                console.error(error);
+                console.info(sound);
+                reject();
+              });
+            }
+          }, 300);
+        });
+
+        sound.wave.on('error', () => {
+          reject(sound.id + ':' + sound.name);
+        });
+
+        sound.wave.load(res);
+      });
+    });
   }
 }
