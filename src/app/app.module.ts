@@ -11,7 +11,7 @@ import { AppService } from './app.service';
 import { TableModule } from 'primeng/table';
 import { ListComponent } from './list/list.component';
 
-import { InputTextModule, ButtonModule, SharedModule, FileUploadModule, MessageService } from 'primeng/primeng';
+import { InputTextModule, ButtonModule, SharedModule, FileUploadModule, MessageService, PanelModule, ListboxModule } from 'primeng/primeng';
 import { ToastModule } from 'primeng/toast';
 import { TagAutocompleteComponent } from './tag-autocomplete/tag-autocomplete.component';
 import { UploadComponent } from './upload/upload.component';
@@ -34,7 +34,9 @@ import { UploadComponent } from './upload/upload.component';
     ButtonModule,
     SharedModule,
     FileUploadModule,
-    ToastModule
+    ToastModule,
+    PanelModule,
+    ListboxModule
   ],
   providers: [
     AppService,

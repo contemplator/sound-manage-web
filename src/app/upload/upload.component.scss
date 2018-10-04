@@ -1,0 +1,17 @@
+.choose-folder {
+  margin: 1em 0;
+}
+
+.folder-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  .folder-level {
+    // flex: 0 0 20%;
+    // border: 1px solid gray;
+    // &:not(:first-child){
+    //   border-left: 0;
+    // }
+  }
+  
+}

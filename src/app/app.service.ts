@@ -4,6 +4,7 @@ import { catchError, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Sound } from 'viewmodels/sound';
 import { Tag } from 'viewmodels/tag';
+import { FolderNode } from 'viewmodels/folder-node';
 
 @Injectable()
 export class AppService {
@@ -54,5 +55,9 @@ export class AppService {
 
   uploadFiles(formData): Observable<any> {
     return this.httpClient.post('http://localhost:3000/sound-manage-server/sound/uploadFile', formData);
+  }
+
+  fetchFolders(): Observable<FolderNode>{
+    return this.httpClient.get<FolderNode>(`${this.host}sound/fetchFolders`);
   }
 }
