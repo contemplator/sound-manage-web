@@ -3,6 +3,7 @@ import { AppService } from '../app.service';
 import { Sound } from 'viewmodels/sound';
 import * as WaveSurfer from 'wavesurfer.js';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -20,8 +21,13 @@ export class ListComponent implements OnInit {
   constructor(
     private service: AppService,
     private sanitizer: DomSanitizer,
-    private zone: NgZone
-  ) { }
+    private zone: NgZone,
+    private route: ActivatedRoute
+  ) {
+    const keyword = this.route.snapshot.paramMap.get('keyword');
+    this.keyword = keyword;
+    this.onKeywordChange();
+  }
 
   ngOnInit() {
     this.fetchFromDatabase();
@@ -38,59 +44,11 @@ export class ListComponent implements OnInit {
         this.soundList = [...this.soundList, ...res];
         this.filtedSoundList = this.soundList;
       }
-      // this.fetchFromDropbos();
-    });
-  }
 
-  /**
-   * 停用
-   * 取得 dropbox 上的音效資料
-   */
-  fetchFromDropbos(): void {
-    const folderPath = '/0_Woolito Animation Team Folder/resource/音效/電影情境類';
-    const decodePath = encodeURIComponent(folderPath);
-
-    this.service.fetchDropboxFolder(decodePath).subscribe(res => {
-      let dropboxList = [];
-      res.forEach(item => {
-        if (Array.isArray(item)) {
-          const list = this.parseFolderToFiles(item);
-          dropboxList = [...dropboxList, ...list];
-        } else {
-          dropboxList = [...dropboxList, item];
-        }
-      });
-      dropboxList = dropboxList.map(item => (new Sound()).parseFromDropbox(item));
-
-      dropboxList.forEach(dropbox => {
-        const index = this.soundList.findIndex(database => database.id === dropbox.id);
-        if (index > -1) {
-          this.soundList[index].url = dropbox.url;
-        } else {
-          this.soundList.push(dropbox);
-          this.generateGraph(dropbox);
-        }
-      });
-      this.filtedSoundList = this.soundList;
-    });
-  }
-
-  /**
-   * 停用
-   * 若遇到 dropbox 上的資料夾，整理好下面的所有檔案及子目錄後再回傳
-   * @param list 
-   */
-  parseFolderToFiles(list: any[]): any[] {
-    let result = [];
-    list.forEach(item => {
-      if (Array.isArray(item)) {
-        let tempList = this.parseFolderToFiles(item);
-        result = [...result, ...tempList];
-      } else {
-        result.push(item);
+      if(this.keyword){
+        this.onKeywordChange();
       }
     });
-    return result;
   }
 
   /**
@@ -149,6 +107,7 @@ export class ListComponent implements OnInit {
    * 改變搜尋的關鍵字
    */
   onKeywordChange(): void {
+    window.history.replaceState('list-page', document.title, `/#/list/${this.keyword}`);
     this.filtedSoundList = this.soundList.filter(item => {
       if (item.name.toUpperCase().indexOf(this.keyword.toUpperCase()) > -1 || this.hasTag(item.tagsClouds, this.keyword)) {
         return true
@@ -237,11 +196,6 @@ export class ListComponent implements OnInit {
    */
   generateGraph(sound): void {
     this.service.fetchDownloadLink(sound.id).subscribe(res => {
-      // const target = document.body;
-      // const element = window.document.createElement('div');
-      // element.setAttribute('id', 'w' + sound.id);
-      // target.appendChild(element);
-
       sound.wave = WaveSurfer.create({
         container: '#w' + sound.id,
         waveColor: 'violet',
@@ -326,22 +280,29 @@ export class ListComponent implements OnInit {
     });
   }
 
+  // 暫停播放
   pause(event: any, sound: Sound): void {
     sound.wave.pause();
     sound.isPause = true;
   }
 
+  // 暫停後播放
   playPause(event: any, sound: Sound): void {
     sound.wave.playPause();
     sound.isPause = false;
   }
 
+  // 重新播放
   playAgain(event: any, sound: Sound): void {
     sound.wave.play();
     sound.isPause = false;
     sound.isFinish = false;
   }
 
+  /**
+   * 停用
+   * 更新所有音波圖
+   */
   async updateAllGraph(): Promise<void> {
     const remSounds = this.soundList.filter(sound => !sound.graph || sound.graph === 'null');
     for (let i = 0; i < remSounds.length; i++) {
@@ -354,6 +315,7 @@ export class ListComponent implements OnInit {
     }
   }
 
+  // 批次更新音波圖
   uploadGraphBatch(sound: Sound): Promise<void> {
     return new Promise((resolve, reject) => {
       this.service.fetchDownloadLink(sound.id).subscribe(res => {
@@ -387,7 +349,7 @@ export class ListComponent implements OnInit {
                   console.log(sound.name + ' done');
                   resolve();
                 }
-              }, error=>{
+              }, error => {
                 console.error(error);
                 console.info(sound);
                 reject();

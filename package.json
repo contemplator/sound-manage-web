@@ -10,7 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "predeploy": "npm run build",
-    "deploy": "ssh root@45.32.62.218 'rm -rf /var/www/sound-manage' && scp -r ./dist root@45.32.62.218:/var/www/sound-manage"
+    "deploy": "ssh root@66.42.58.237 'rm -rf /var/www/sound-manage' && scp -r ./dist root@66.42.58.237:/var/www/sound-manage"
   },
   "private": true,
   "dependencies": {
