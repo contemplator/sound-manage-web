@@ -32,7 +32,7 @@
           </app-tag-autocomplete>
         </td>
         <td [style.max-width]="'88px'" [style.min-width]="'88px'">
-          <button (click)="onDownloadClick(sound.id)" type="button" pButton label="下載"></button>
+          <button (click)="onDownloadClick(sound.url)" type="button" pButton label="下載"></button>
         </td>
         <td [style.max-width]="'480px'" [style.min-width]="'480px'">
           <div class="graph-container">
@@ -53,3 +53,5 @@
 </div>
 
 <div id="waveform"></div>
+
+<app-loading [show]="showLoading"></app-loading>

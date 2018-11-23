@@ -1,10 +1,9 @@
 <div class="center-container">
   <div class="search-box ui-inputgroup">
     <!-- <input id="input" type="text" pInputText [(ngModel)]="keyword"> -->
-    <p-autoComplete [(ngModel)]="keyword" [suggestions]="filtedTagList" (completeMethod)="filterTag($event)" [minLength]="1" [inputStyle]="{'height': '40px'}" (keydown.enter)="onEnter($event)" forceSelection="true"></p-autoComplete>
-    <button pButton type="button" label="Search"></button>
+    <p-autoComplete [(ngModel)]="keyword" [suggestions]="filtedTagList" (completeMethod)="filterTag($event)" [minLength]="1" [inputStyle]="{'height': '40px'}" (keydown.enter)="onEnter($event)"></p-autoComplete>
+    <button pButton type="button" label="Search" (click)="search(keyword)"></button>
   </div>
-  
   <div class="tag-cloud">
     <a class="tag-item" *ngFor="let item of frontTaglist; let i=index" (click)="search(item)">{{item}}</a>
   </div>

@@ -11,11 +11,12 @@ import { AppService } from './app.service';
 import { TableModule } from 'primeng/table';
 import { ListComponent } from './list/list.component';
 
-import { InputTextModule, ButtonModule, SharedModule, FileUploadModule, MessageService, PanelModule, ListboxModule, AutoCompleteModule } from 'primeng/primeng';
+import { InputTextModule, ButtonModule, SharedModule, FileUploadModule, MessageService, PanelModule, ListboxModule, AutoCompleteModule, BlockUIModule } from 'primeng/primeng';
 import { ToastModule } from 'primeng/toast';
 import { TagAutocompleteComponent } from './tag-autocomplete/tag-autocomplete.component';
 import { UploadComponent } from './upload/upload.component';
 import { IndexComponent } from './index/index.component';
+import { LoadingComponent } from './loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { IndexComponent } from './index/index.component';
     ListComponent,
     TagAutocompleteComponent,
     UploadComponent,
-    IndexComponent
+    IndexComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +42,8 @@ import { IndexComponent } from './index/index.component';
     PanelModule,
     ListboxModule,
     InputTextModule,
-    AutoCompleteModule
+    AutoCompleteModule,
+    BlockUIModule
   ],
   providers: [
     AppService,

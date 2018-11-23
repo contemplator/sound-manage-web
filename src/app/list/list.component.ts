@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, isDevMode } from '@angular/core';
 import { AppService } from '../app.service';
 import { Sound } from 'viewmodels/sound';
 import * as WaveSurfer from 'wavesurfer.js';
@@ -11,12 +11,13 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
-  soundList: Sound[] = [];
-  filtedSoundList = [];
-  tagList = [];
-  filtedTagList = [];
-  keyword = '';
-  wavesurfer: any;
+  soundList: Sound[] = [];          // 所有音效檔案
+  filtedSoundList = [];             // 篩選後的音效檔案
+  tagList = [];                     // 標籤列表
+  filtedTagList = [];               // 篩選後的標籤列表
+  keyword = '';                     // 關鍵字
+  wavesurfer: any;                  // 產生音波圖的物件
+  showLoading = false;              // 是否顯示讀取中
 
   constructor(
     private service: AppService,
@@ -24,36 +25,46 @@ export class ListComponent implements OnInit {
     private zone: NgZone,
     private route: ActivatedRoute
   ) {
-    const keyword = this.route.snapshot.paramMap.get('keyword');
-    this.keyword = keyword;
-    this.onKeywordChange();
   }
 
   ngOnInit() {
-    this.fetchFromDatabase();
+    const keyword = this.route.snapshot.paramMap.get('keyword');
+    this.keyword = keyword;
+    this.fetchAllSound();
     this.fetchTagsList();
+  }
+
+  /**
+   * 停用
+   * 查詢音效
+   */
+  fetchSounds(): void {
+    this.showLoading = true;
+    this.service.fetchSounds(this.keyword).subscribe(res => {
+      this.filtedSoundList = res.map(item => (new Sound()).parseFromDatabase(item));
+      this.showLoading = false;
+    });
   }
 
   /**
    * 取得 db 內的音效資料
    */
-  fetchFromDatabase(): void {
-    this.service.fetchDbSounds().subscribe(res => {
+  fetchAllSound(): void {
+    this.showLoading = true;
+    this.service.fetchAllSounds().subscribe(res => {
       if (res) {
         res = res.map(item => (new Sound()).parseFromDatabase(item));
         this.soundList = [...this.soundList, ...res];
         this.filtedSoundList = this.soundList;
+        this.showLoading = false;
       }
 
-      if(this.keyword){
-        this.onKeywordChange();
-      }
+      this.onKeywordChange();
     });
   }
 
   /**
    * 顯示時間
-   * @param datetime 
    */
   showDatetime(datetime: Date): string {
     if (!datetime) { return ''; }
@@ -62,7 +73,7 @@ export class ListComponent implements OnInit {
 
   /**
    * 新增標籤
-   * @param sound 
+   * @param sound 音效檔案
    */
   onTagsAdd(sound: Sound): void {
     this.service.updateSound(sound).subscribe(res => {
@@ -74,8 +85,8 @@ export class ListComponent implements OnInit {
 
   /**
    * 刪除標籤
-   * @param event 
-   * @param sound 
+   * @param event 事件
+   * @param sound 要刪除標籤的音效檔案
    */
   onTagsRemove(event: any, sound: Sound): void {
     this.service.deleteTag(sound.id, event).subscribe(res => {
@@ -85,7 +96,7 @@ export class ListComponent implements OnInit {
 
   /**
    * 點擊下載
-   * @param url 
+   * @param url dropbox 檔案的路徑
    */
   onDownloadClick(url: string): void {
     this.service.fetchDownloadLink(url).subscribe(res => {
@@ -95,6 +106,7 @@ export class ListComponent implements OnInit {
 
   /**
    * 下載檔案
+   * @param res api 回傳的結果
    */
   downloadFile(res: any): void {
     let link = window.document.createElement("a");
@@ -107,7 +119,18 @@ export class ListComponent implements OnInit {
    * 改變搜尋的關鍵字
    */
   onKeywordChange(): void {
-    window.history.replaceState('list-page', document.title, `/#/list/${this.keyword}`);
+    if (isDevMode()) {
+      window.history.replaceState('list-page', document.title, `/#/list/${this.keyword}`);
+    } else {
+      window.history.replaceState('list-page', document.title, `/sound-manage/#/list/${this.keyword}`);
+    }
+    this.filterSound();
+  }
+
+  /**
+   * 篩選音效檔案
+   */
+  filterSound(): void{
     this.filtedSoundList = this.soundList.filter(item => {
       if (item.name.toUpperCase().indexOf(this.keyword.toUpperCase()) > -1 || this.hasTag(item.tagsClouds, this.keyword)) {
         return true
@@ -119,8 +142,8 @@ export class ListComponent implements OnInit {
 
   /**
    * 關鍵字篩選，判斷標籤內有符合的項目
-   * @param tags 
-   * @param keyword 
+   * @param tags 音效檔案所有標籤
+   * @param keyword 關鍵字
    */
   hasTag(tags: string[], keyword: string): boolean {
     const index = tags.findIndex(item => {
@@ -148,7 +171,6 @@ export class ListComponent implements OnInit {
 
   /**
    * auto complete 元件的篩選標籤
-   * @param event 
    */
   filterTag(event): void {
     const keyword = event.query.toUpperCase();
@@ -160,8 +182,8 @@ export class ListComponent implements OnInit {
 
   /**
    * 點擊更新音波圖
-   * @param event 
-   * @param sound 
+   * @param event 事件
+   * @param sound 音效檔案物件
    */
   updateVoiceGraph(event: any, sound: Sound): void {
     this.service.fetchDownloadLink(sound.id).subscribe(res => {
@@ -190,42 +212,8 @@ export class ListComponent implements OnInit {
   }
 
   /**
-   * 停用
-   * 產生音波圖
-   * @param sound 
-   */
-  generateGraph(sound): void {
-    this.service.fetchDownloadLink(sound.id).subscribe(res => {
-      sound.wave = WaveSurfer.create({
-        container: '#w' + sound.id,
-        waveColor: 'violet',
-        progressColor: 'purple'
-      });
-
-      sound.wave.on('ready', () => {
-        setTimeout(() => {
-          const waveElement = document.body.querySelector('#w' + sound.id);
-          const canvas = waveElement.querySelectorAll('canvas')[0];
-          if (canvas.getContext) {
-            var image = canvas.toDataURL("image/png");
-            sound.graph = image;
-            sound.wave = null
-            this.service.updateSound(sound).subscribe(res2 => {
-              console.log(res2);
-            }, error => {
-              console.log(error, sound)
-            });
-          }
-        }, 300);
-      });
-
-      sound.wave.load(res);
-    });
-  }
-
-  /**
    * 通過 angular url 安全檢查
-   * @param resource 
+   * @param resource url
    */
   safeResource(resource: string): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(resource);
@@ -233,11 +221,9 @@ export class ListComponent implements OnInit {
 
   /**
    * 點擊播放
-   * @param event 
-   * @param sound 
    */
   play(event: any, sound: Sound): void {
-    this.service.fetchDownloadLink(sound.id).subscribe(res => {
+    this.service.fetchDownloadLink(sound.url).subscribe(res => {
       const waveElement = document.body.querySelector('#w' + sound.id);
       waveElement.innerHTML = '';
 
@@ -280,19 +266,25 @@ export class ListComponent implements OnInit {
     });
   }
 
-  // 暫停播放
+  /**
+   * 暫停播放
+   */
   pause(event: any, sound: Sound): void {
     sound.wave.pause();
     sound.isPause = true;
   }
 
-  // 暫停後播放
+  /**
+   * 暫停後播放
+   */
   playPause(event: any, sound: Sound): void {
     sound.wave.playPause();
     sound.isPause = false;
   }
 
-  // 重新播放
+  /**
+   * 重新播放
+   */
   playAgain(event: any, sound: Sound): void {
     sound.wave.play();
     sound.isPause = false;
@@ -300,7 +292,6 @@ export class ListComponent implements OnInit {
   }
 
   /**
-   * 停用
    * 更新所有音波圖
    */
   async updateAllGraph(): Promise<void> {
@@ -315,16 +306,17 @@ export class ListComponent implements OnInit {
     }
   }
 
-  // 批次更新音波圖
+  /**
+   * 批次更新音波圖
+   */
   uploadGraphBatch(sound: Sound): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.service.fetchDownloadLink(sound.id).subscribe(res => {
+      this.service.fetchDownloadLink(sound.url).subscribe(res => {
         if (sound.name.indexOf('.wav') === -1 && sound.name.indexOf('.mp3') === -1) {
           console.error(sound.name, 'not type');
           resolve();
           return;
         }
-        console.log(sound.name, sound.url, 'start');
         const target = document.body.querySelector('#waveform');
         target.innerHTML = '';
         const element = window.document.createElement('div');
@@ -346,7 +338,6 @@ export class ListComponent implements OnInit {
               sound.graph = image;
               this.service.updateSound(sound).subscribe(res => {
                 if (res) {
-                  console.log(sound.name + ' done');
                   resolve();
                 }
               }, error => {
