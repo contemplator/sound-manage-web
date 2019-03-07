@@ -4,13 +4,13 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --proxy-config proxy.config.json",
     "build": "ng build --prod --aot --base-href=./",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "predeploy": "npm run build",
-    "deploy": "ssh root@66.42.58.237 'rm -rf /var/www/sound-manage' && scp -r ./dist root@66.42.58.237:/var/www/sound-manage"
+    "deploy": "ssh woolito@woooplay.com 'rm -rf /home/woolito/public_html/sound-manage' && scp -r ./dist woolito@woooplay.com:/home/woolito/public_html/sound-manage"
   },
   "private": true,
   "dependencies": {
