@@ -13,8 +13,8 @@ import { ActivatedRoute } from '@angular/router';
 export class ListComponent implements OnInit {
   soundList: Sound[] = [];          // 所有音效檔案
   filtedSoundList = [];             // 篩選後的音效檔案
-  tagList = [];                     // 標籤列表
-  filtedTagList = [];               // 篩選後的標籤列表
+  labelList = [];                     // 標籤列表
+  filtedLabelList = [];               // 篩選後的標籤列表
   keyword = '';                     // 關鍵字
   wavesurfer: any;                  // 產生音波圖的物件
   showLoading = false;              // 是否顯示讀取中
@@ -29,25 +29,27 @@ export class ListComponent implements OnInit {
 
   ngOnInit() {
     const keyword = this.route.snapshot.paramMap.get('keyword');
-    this.keyword = keyword;
-    this.fetchAllSound();
-    this.fetchTagsList();
+    this.keyword = keyword || '';
+    this.fetchSounds();
+    this.fetchLabelsList();
   }
 
   /**
-   * 停用
    * 查詢音效
    */
   fetchSounds(): void {
     this.showLoading = true;
     this.service.fetchSounds(this.keyword).subscribe(res => {
-      this.filtedSoundList = res.map(item => (new Sound()).parseFromDatabase(item));
+      console.log(res);
+      this.soundList = res.map(item => (new Sound()).parseFromDatabase(item));
+      this.filtedSoundList = this.soundList;
       this.showLoading = false;
     });
   }
 
   /**
    * 取得 db 內的音效資料
+   * 停用
    */
   fetchAllSound(): void {
     this.showLoading = true;
@@ -75,7 +77,7 @@ export class ListComponent implements OnInit {
    * 新增標籤
    * @param sound 音效檔案
    */
-  onTagsAdd(sound: Sound): void {
+  onLabelAdd(sound: Sound): void {
     this.service.updateSound(sound).subscribe(res => {
       if (!res) {
         console.error(res, sound);
@@ -88,8 +90,8 @@ export class ListComponent implements OnInit {
    * @param event 事件
    * @param sound 要刪除標籤的音效檔案
    */
-  onTagsRemove(event: any, sound: Sound): void {
-    this.service.deleteTag(sound.id, event).subscribe(res => {
+  onLabelRemove(event: any, sound: Sound): void {
+    this.service.deleteLabel(sound.url, event).subscribe(res => {
       console.info(res);
     });
   }
@@ -124,15 +126,17 @@ export class ListComponent implements OnInit {
     } else {
       window.history.replaceState('list-page', document.title, `/sound-manage/#/list/${this.keyword}`);
     }
-    this.filterSound();
+    this.fetchSounds();
+    // this.filterSound();
   }
 
   /**
    * 篩選音效檔案
+   * 停用
    */
-  filterSound(): void{
+  filterSound(): void {
     this.filtedSoundList = this.soundList.filter(item => {
-      if (item.name.toUpperCase().indexOf(this.keyword.toUpperCase()) > -1 || this.hasTag(item.tagsClouds, this.keyword)) {
+      if (item.name.toUpperCase().indexOf(this.keyword.toUpperCase()) > -1 || this.hasLabel(item.labelClouds, this.keyword)) {
         return true
       } else {
         return false;
@@ -142,11 +146,11 @@ export class ListComponent implements OnInit {
 
   /**
    * 關鍵字篩選，判斷標籤內有符合的項目
-   * @param tags 音效檔案所有標籤
+   * @param labels 音效檔案所有標籤
    * @param keyword 關鍵字
    */
-  hasTag(tags: string[], keyword: string): boolean {
-    const index = tags.findIndex(item => {
+  hasLabel(labels: string[], keyword: string): boolean {
+    const index = labels.findIndex(item => {
       if (item.toUpperCase().indexOf(keyword.toUpperCase()) > -1) {
         return true;
       } else {
@@ -159,12 +163,12 @@ export class ListComponent implements OnInit {
   /**
    * 取得過去所有標籤列表
    */
-  fetchTagsList(): void {
-    this.service.fetchTags().subscribe(res => {
+  fetchLabelsList(): void {
+    this.service.fetchLabels().subscribe(res => {
       if (res) {
-        this.tagList = res.map(item => item.name);
+        this.labelList = res.map(item => item.name);
       } else {
-        this.tagList = [];
+        this.labelList = [];
       }
     });
   }
@@ -172,9 +176,9 @@ export class ListComponent implements OnInit {
   /**
    * auto complete 元件的篩選標籤
    */
-  filterTag(event): void {
+  filterLabel(event): void {
     const keyword = event.query.toUpperCase();
-    this.filtedTagList = this.tagList.filter(item => {
+    this.filtedLabelList = this.labelList.filter(item => {
       const index = item.toUpperCase().indexOf(keyword);
       return index > -1 ? true : false;
     });
@@ -350,7 +354,7 @@ export class ListComponent implements OnInit {
         });
 
         sound.wave.on('error', () => {
-          reject(sound.id + ':' + sound.name);
+          reject(sound.url + ':' + sound.name);
         });
 
         sound.wave.load(res);

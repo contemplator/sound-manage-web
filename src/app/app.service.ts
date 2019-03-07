@@ -47,8 +47,8 @@ export class AppService {
    * @param sound 音效物件 
    */
   updateSound(sound: Sound): Observable<Sound> {
-    if(sound.tagsClouds){
-      sound.tags = sound.tagsClouds.length > 0 ? sound.tagsClouds.join(',') : '';
+    if(sound.labelClouds){
+      sound.labels = sound.labelClouds.length > 0 ? sound.labelClouds.join(',') : '';
     }
     sound.wave = null;
     return this.httpClient.post<Sound>(`${this.host}sound/set`, sound);
@@ -67,22 +67,22 @@ export class AppService {
 
   /**
    * 刪除檔案標籤
-   * @param soundId 資料庫內音效的 id 
-   * @param tag 標籤
+   * @param url 資料庫內音效的 url
+   * @param label 標籤
    */
-  deleteTag(soundId: string, tag: string): Observable<boolean> {
+  deleteLabel(url: string, label: string): Observable<boolean> {
     const data = {
-      soundId: soundId,
-      tag: tag
+      url: url,
+      label: label
     };
-    return this.httpClient.post<boolean>(`${this.host}sound/deleteTag`, data);
+    return this.httpClient.post<boolean>(`${this.host}sound/deleteLabel`, data);
   }
 
   /**
    * 抓取所有標籤
    */
-  fetchTags(): Observable<Tag[]> {
-    return this.httpClient.get<Tag[]>(`${this.host}sound/fetchTags`);
+  fetchLabels(): Observable<Tag[]> {
+    return this.httpClient.get<Tag[]>(`${this.host}sound/fetchLabels`);
   }
 
   /**

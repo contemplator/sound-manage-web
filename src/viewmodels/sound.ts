@@ -5,8 +5,8 @@ export class Sound {
   name: string;
   url: string;
   modifyDatetime: Date;
-  tags: string;
-  tagsClouds: string[];
+  labels: string;
+  labelClouds: string[];
   graph: any;
   wave: any;
   isPause: boolean;
@@ -17,8 +17,8 @@ export class Sound {
     this.name = '';
     this.url = '';
     this.modifyDatetime = new Date();
-    this.tags = '';
-    this.tagsClouds = [];
+    this.labels = '';
+    this.labelClouds = [];
     this.graph = null;
   }
 
@@ -27,8 +27,8 @@ export class Sound {
     this.name = json.name;
     this.url = json.path_display;
     this.modifyDatetime = new Date(json.server_modified);
-    this.tags = '';
-    this.tagsClouds = [];
+    this.labels = '';
+    this.labelClouds = [];
     this.graph = null;
     return this;
   }
@@ -38,8 +38,8 @@ export class Sound {
     this.name = json.name;
     this.url = json.url;
     this.modifyDatetime = new Date(json.modifyDatetime);
-    this.tags = json.tags ? json.tags : '';
-    this.tagsClouds = this.tags.length > 0 ? this.tags.split(','): [];
+    this.labels = json.labels ? json.labels : '';
+    this.labelClouds = this.labels.length > 0 ? this.labels.split(','): [];
     this.graph = json.graph;
     return this;
   }

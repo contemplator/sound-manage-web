@@ -26,7 +26,7 @@ export class IndexComponent implements OnInit {
    * 取得過去所有 tag
    */
   fetchTags(): void {
-    this.service.fetchTags().subscribe(res => {
+    this.service.fetchLabels().subscribe(res => {
       this.tagList = res.map(item => item.name);
       this.frontTaglist = this.tagList.slice(0, 20);
     });

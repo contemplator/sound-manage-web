@@ -1,7 +1,7 @@
 <div class="search-box">
   <label>
     <span>搜尋檔案標籤</span>
-    <input type="text" [(ngModel)]="keyword" (ngModelChange)="onKeywordChange()" pInputText>
+    <input type="text" [(ngModel)]="keyword" (keyup.enter)="onKeywordChange()" pInputText>
   </label>
 
   <button class="btn-graph" (click)="updateAllGraph()" pButton label="更新所有音波圖"></button>
@@ -26,7 +26,7 @@
         <td [style.max-width]="'240px'" [style.min-width]="'240px'">{{sound.name}}</td>
         <td [style.max-width]="'136px'" [style.min-width]="'136px'">{{showDatetime(sound.modifyDatetime) | slice:0:10}}</td>
         <td>
-          <app-tag-autocomplete [(ngModel)]="sound.tagsClouds" [suggestions]="filtedTagList" (completeMethod)="filterTag($event)" placeholder="tag" [multiple]="true" (onSelect)="onTagsAdd(sound)" (onUnselect)="onTagsRemove($event, sound)" [inputStyle]="{'width': '100%'}">
+          <app-tag-autocomplete [(ngModel)]="sound.labelClouds" [suggestions]="filtedLabelList" (completeMethod)="filterLabel($event)" placeholder="tag" [multiple]="true" (onSelect)="onLabelAdd(sound)" (onUnselect)="onLabelRemove($event, sound)" [inputStyle]="{'width': '100%'}">
           </app-tag-autocomplete>
         </td>
         <td [style.max-width]="'88px'" [style.min-width]="'88px'">
