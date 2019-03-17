@@ -2,47 +2,61 @@
   <label>
     <span>搜尋檔案標籤</span>
     <input type="text" [(ngModel)]="keyword" (keyup.enter)="onKeywordChange()" pInputText>
+    <span *ngIf="showLoading">搜尋中...</span>
   </label>
 
   <button class="btn-graph" (click)="updateAllGraph()" pButton label="更新所有音波圖"></button>
 </div>
 
 <div class="file-table">
-  <p-table [value]="filtedSoundList" [paginator]="true" [rows]="10" [pageLinks]="10">
-    <ng-template pTemplate="header">
+  <p-table [columns]="cols" [value]="virtualSoundList" [scrollable]="true" [scrollHeight]="scrollHeight" (onLazyLoad)="loadDataOnScroll($event)" [lazy]="true" [totalRecords]="soundList.length" [virtualRowHeight]="34" [rows]="rows" [virtualScroll]="true">
+    <ng-template pTemplate="colgroup" let-columns>
+      <colgroup>
+        <col *ngFor="let col of columns" [style.width]="col.width + 'em'">
+      </colgroup>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
       <tr>
-        <th>檔名</th>
-        <th [pSortableColumn]="'server_modified'">
-          <span>最後修改時間</span>
-          <p-sortIcon [field]="'server_modified'"></p-sortIcon>
+        <th *ngFor="let col of columns">
+          {{col.header}}
         </th>
-        <th>標籤</th>
-        <th>下載</th>
-        <th>音源預覽</th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-sound>
+    <ng-template pTemplate="body" let-columns="columns" let-rowData>
       <tr>
-        <td [style.max-width]="'240px'" [style.min-width]="'240px'">{{sound.name}}</td>
-        <td [style.max-width]="'136px'" [style.min-width]="'136px'">{{showDatetime(sound.modifyDatetime) | slice:0:10}}</td>
-        <td>
-          <app-tag-autocomplete [(ngModel)]="sound.labelClouds" [suggestions]="filtedLabelList" (completeMethod)="filterLabel($event)" placeholder="tag" [multiple]="true" (onSelect)="onLabelAdd(sound)" (onUnselect)="onLabelRemove($event, sound)" [inputStyle]="{'width': '100%'}">
-          </app-tag-autocomplete>
-        </td>
-        <td [style.max-width]="'88px'" [style.min-width]="'88px'">
-          <button (click)="onDownloadClick(sound.url)" type="button" pButton label="下載"></button>
-        </td>
-        <td [style.max-width]="'480px'" [style.min-width]="'480px'">
-          <div class="graph-container">
-            <button class="btn btn-update" *ngIf="!sound.graph || sound.graph === 'null'" (click)="updateVoiceGraph($event, sound)" type="button" pButton label="更新音波圖"></button>
-            <button class="btn btn-play" pButton label="播放" (click)="play($event, sound)" type="button" *ngIf="!sound.wave"></button>
-            <button class="btn btn-continue" pButton label="播放" (click)="playPause($event, sound)" type="button" *ngIf="sound.wave && sound.isPause && !sound.isFinish"></button>
-            <button class="btn btn-pause" pButton label="暫停" (click)="pause($event, sound)" type="button" *ngIf="sound.wave && !sound.isPause && !sound.isFinish"></button>
-            <button class="btn btn-again" pButton label="再一次" (click)="playAgain($event, sound)" type="button" *ngIf="sound.wave && sound.isFinish"></button>
-            <div [id]="'w' + sound.id">
-              <img *ngIf="sound.graph && sound.graph !== 'null'" [src]="safeResource(sound.graph)">
-            </div>
-          </div>
+        <ng-container *ngFor="let col of columns">
+          <ng-container [ngSwitch]="col.field">
+            <td *ngSwitchCase="'name'">
+              {{rowData.name}}
+            </td>
+            <td *ngSwitchCase="'modifyDatetime'">
+              {{showDatetime(rowData.modifyDatetime) | slice:0:10}}
+            </td>
+            <td *ngSwitchCase="'labels'">
+              <app-tag-autocomplete [(ngModel)]="rowData.labelClouds" [suggestions]="filtedLabelList" (completeMethod)="filterLabel($event)" placeholder="label" [multiple]="true" (onSelect)="onLabelAdd(rowData)" (onUnselect)="onLabelRemove($event, rowData)" (tokenClick)="onLabelClick($event)" [inputStyle]="{'width': '100%'}">
+              </app-tag-autocomplete>
+            </td>
+            <td *ngSwitchCase="'download'">
+              <button (click)="onDownloadClick(rowData.url)" type="button" pButton label="下載"></button>
+            </td>
+            <td *ngSwitchCase="'graph'" class="graph-container">
+              <button class="btn btn-update" *ngIf="!rowData.graph || rowData.graph === 'null'" (click)="updateVoiceGraph($event, rowData)" type="button" pButton label="更新音波圖"></button>
+              <button class="btn btn-play" pButton label="播放" (click)="play($event, rowData)" type="button" *ngIf="!rowData.wave"></button>
+              <button class="btn btn-continue" pButton label="繼續播放" (click)="playPause($event, rowData)" type="button" *ngIf="rowData.wave && rowData.isPause && !rowData.isFinish"></button>
+              <button class="btn btn-pause" pButton label="暫停" (click)="pause($event, rowData)" type="button" *ngIf="rowData.wave && !rowData.isPause && !rowData.isFinish"></button>
+              <button class="btn btn-again" pButton label="再一次" (click)="playAgain($event, rowData)" type="button" *ngIf="rowData.wave && rowData.isFinish"></button>
+              <div [id]="'w' + rowData.id">
+                <img *ngIf="rowData.graph && rowData.graph !== 'null'" [src]="safeResource(rowData.graph)">
+              </div>
+            </td>
+          </ng-container>
+        </ng-container>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="loadingbody" let-columns="columns">
+      <tr>
+        <td [colSpan]="columns.length">
+          讀取中...
         </td>
       </tr>
     </ng-template>
@@ -50,5 +64,3 @@
 </div>
 
 <div id="waveform"></div>
-
-<app-loading [show]="showLoading"></app-loading>

@@ -34,10 +34,14 @@ export class AppService {
   /**
    * 關鍵字查詢音效
    * @param keyword 關鍵字
+   * @param offset 起始
+   * @param limit 筆數 
    */
-  fetchSounds(keyword: string): Observable<Sound[]> {
+  fetchSounds(keyword: string, offset: number = 0, limit: number = 30): Observable<Sound[]> {
     const data = {
-      keyword: keyword
+      keyword: keyword,
+      offset: offset,
+      limit: limit
     };
     return this.httpClient.post<Sound[]>(`${this.host}sound/fetchSounds`, data);
   }
@@ -47,7 +51,7 @@ export class AppService {
    * @param sound 音效物件 
    */
   updateSound(sound: Sound): Observable<Sound> {
-    if(sound.labelClouds){
+    if (sound.labelClouds) {
       sound.labels = sound.labelClouds.length > 0 ? sound.labelClouds.join(',') : '';
     }
     sound.wave = null;
@@ -96,7 +100,7 @@ export class AppService {
   /**
    * 取得資料夾結構
    */
-  fetchFolders(): Observable<FolderNode>{
+  fetchFolders(): Observable<FolderNode> {
     return this.httpClient.get<FolderNode>(`${this.host}sound/fetchFolders`);
   }
 }

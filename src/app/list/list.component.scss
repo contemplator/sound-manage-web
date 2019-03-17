@@ -1,33 +1,76 @@
 .search-box {
   line-height: 40px;
+
   label span {
     margin-right: 8px;
   }
 }
 
 .file-table {
-  ::ng-deep .ui-table table {
-    table-layout: auto;
+  ::ng-deep {
+    .ui-table table {
+      table-layout: fixed;
+    }
+
+    .ui-autocomplete.ui-autocomplete-multiple .ui-autocomplete-multiple-container .ui-autocomplete-token {
+      margin: 0.2em 0.286em 0 0;
+    }
+
+    .ui-table .ui-table-thead>tr>th,
+    .ui-table .ui-table-tbody>tr>td {
+      padding: 4px;
+    }
+
+    td+.graph-container {
+      padding: 0;
+    }
   }
 
-  ::ng-deep tbody td:nth-child(1) {
-    overflow: hidden;
+  .graph-container {
+    position: relative;
+    img{
+      width: 100%;
+      height: 80px;
+    }
+
+    >div {
+      height: 80px;
+    }
   }
 
-  ::ng-deep tbody td:nth-child(5) img {
-    width: calc(480px - 1em);
-  }
-
-  ::ng-deep .ui-autocomplete.ui-autocomplete-multiple .ui-autocomplete-multiple-container .ui-autocomplete-token {
-    margin: 0.2em 0.286em 0 0;
-  }
-}
-
-.graph-container {
-  position: relative;
   .btn-update {
     margin-right: 8px;
   }
+
+  .btn-play,
+  .btn-continue,
+  .btn-pause,
+  .btn-again {
+    display: none;
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    z-index: 1001;
+  }
+
+  .btn-update{
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 1001;
+  }
+
+  td:hover {
+
+    .btn-play,
+    .btn-continue,
+    .btn-pause,
+    .btn-again {
+      display: initial;
+    }
+  }
+
+
 }
 
 .btn-graph {

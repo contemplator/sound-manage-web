@@ -7,8 +7,8 @@
     [attr.tabindex]="tabindex" [readonly]="readonly" [disabled]="disabled">
   <ul *ngIf="multiple" #multiContainer class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-state-default ui-corner-all"
     [ngClass]="{'ui-state-disabled':disabled,'ui-state-focus':focus}" (click)="multiIn.focus()">
-    <li #token *ngFor="let val of value" class="ui-autocomplete-token ui-state-highlight ui-corner-all">
-      <span class="ui-autocomplete-token-icon fa fa-times" (click)="removeItem(token)" *ngIf="!disabled"></span>
+    <li #token *ngFor="let val of value" class="ui-autocomplete-token ui-state-highlight ui-corner-all" (click)="onTokenClick($event, val)">
+      <span class="ui-autocomplete-token-icon pi pi-times" (click)="removeItem(token)" *ngIf="!disabled"></span>
       <span *ngIf="!selectedItemTemplate" class="ui-autocomplete-token-label">{{field ? objectUtils.resolveFieldData(val, field): val}}</span>
       <ng-container *ngTemplateOutlet="selectedItemTemplate; context: {$implicit: val}"></ng-container>
     </li>

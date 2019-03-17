@@ -72,6 +72,8 @@ export class TagAutocompleteComponent implements AfterViewInit, AfterViewChecked
 
   @Output() onKeyUp: EventEmitter<any> = new EventEmitter();
 
+  @Output() tokenClick: EventEmitter<any> = new EventEmitter();
+
   @Input() field: string;
 
   @Input() scrollHeight: string = '200px';
@@ -219,7 +221,7 @@ export class TagAutocompleteComponent implements AfterViewInit, AfterViewChecked
       if (this.appendTo === 'body')
         document.body.appendChild(this.panelEL.nativeElement);
       else
-        this.domHandler.appendChild(this.panelEL.nativeElement, this.appendTo);
+        DomHandler.appendChild(this.panelEL.nativeElement, this.appendTo);
     }
   }
 
@@ -232,9 +234,9 @@ export class TagAutocompleteComponent implements AfterViewInit, AfterViewChecked
 
     if (this.highlightOptionChanged) {
       setTimeout(() => {
-        let listItem = this.domHandler.findSingle(this.panelEL.nativeElement, 'li.ui-state-highlight');
+        let listItem = DomHandler.findSingle(this.panelEL.nativeElement, 'li.ui-state-highlight');
         if (listItem) {
-          this.domHandler.scrollInView(this.panelEL.nativeElement, listItem);
+          DomHandler.scrollInView(this.panelEL.nativeElement, listItem);
         }
       }, 1);
       this.highlightOptionChanged = false;
@@ -321,7 +323,7 @@ export class TagAutocompleteComponent implements AfterViewInit, AfterViewChecked
       }
     }
     else {
-      this.inputEL.nativeElement.value = this.field ? this.objectUtils.resolveFieldData(option, this.field) || '' : option;
+      this.inputEL.nativeElement.value = this.field ? ObjectUtils.resolveFieldData(option, this.field) || '' : option;
       this.value = option;
       this.onModelChange(this.value);
     }
@@ -341,10 +343,10 @@ export class TagAutocompleteComponent implements AfterViewInit, AfterViewChecked
       if (!this.panelVisible && hasFocus) {
         this.panelVisible = true;
         if (this.appendTo) {
-          this.panelEL.nativeElement.style.minWidth = this.domHandler.getWidth(this.el.nativeElement.children[0]) + 'px';
+          this.panelEL.nativeElement.style.minWidth = DomHandler.getWidth(this.el.nativeElement.children[0]) + 'px';
         }
         this.panelEL.nativeElement.style.zIndex = ++DomHandler.zindex;
-        this.domHandler.fadeIn(this.panelEL.nativeElement, 200);
+        DomHandler.fadeIn(this.panelEL.nativeElement, 200);
         this.bindDocumentClickListener();
       }
     }
@@ -352,9 +354,9 @@ export class TagAutocompleteComponent implements AfterViewInit, AfterViewChecked
 
   align() {
     if (this.appendTo)
-      this.domHandler.absolutePosition(this.panelEL.nativeElement, (this.multiple ? this.multiContainerEL.nativeElement : this.inputEL.nativeElement));
+      DomHandler.absolutePosition(this.panelEL.nativeElement, (this.multiple ? this.multiContainerEL.nativeElement : this.inputEL.nativeElement));
     else
-      this.domHandler.relativePosition(this.panelEL.nativeElement, (this.multiple ? this.multiContainerEL.nativeElement : this.inputEL.nativeElement));
+      DomHandler.relativePosition(this.panelEL.nativeElement, (this.multiple ? this.multiContainerEL.nativeElement : this.inputEL.nativeElement));
   }
 
   hide() {
@@ -385,7 +387,7 @@ export class TagAutocompleteComponent implements AfterViewInit, AfterViewChecked
   }
 
   removeItem(item: any) {
-    let itemIndex = this.domHandler.index(item);
+    let itemIndex = DomHandler.index(item);
     let removedValue = this.value[itemIndex];
     this.value = this.value.filter((val, i) => i != itemIndex);
     this.onModelChange(this.value);
@@ -505,7 +507,7 @@ export class TagAutocompleteComponent implements AfterViewInit, AfterViewChecked
 
       if (this.suggestions) {
         for (let suggestion of this.suggestions) {
-          let itemValue = this.field ? this.objectUtils.resolveFieldData(suggestion, this.field) : suggestion;
+          let itemValue = this.field ? ObjectUtils.resolveFieldData(suggestion, this.field) : suggestion;
           if (itemValue && inputValue === itemValue.trim()) {
             valid = true;
             this.selectItem(suggestion, false);
@@ -533,7 +535,7 @@ export class TagAutocompleteComponent implements AfterViewInit, AfterViewChecked
     let selected: boolean = false;
     if (this.value && this.value.length) {
       for (let i = 0; i < this.value.length; i++) {
-        if (this.objectUtils.equals(this.value[i], val, this.dataKey)) {
+        if (ObjectUtils.equals(this.value[i], val, this.dataKey)) {
           selected = true;
           break;
         }
@@ -546,7 +548,7 @@ export class TagAutocompleteComponent implements AfterViewInit, AfterViewChecked
     let index: number = -1;
     if (this.suggestions) {
       for (let i = 0; i < this.suggestions.length; i++) {
-        if (this.objectUtils.equals(option, this.suggestions[i])) {
+        if (ObjectUtils.equals(option, this.suggestions[i])) {
           index = i;
           break;
         }
@@ -564,7 +566,7 @@ export class TagAutocompleteComponent implements AfterViewInit, AfterViewChecked
   }
 
   updateInputField() {
-    let formattedValue = this.value ? (this.field ? this.objectUtils.resolveFieldData(this.value, this.field) || '' : this.value) : '';
+    let formattedValue = this.value ? (this.field ? ObjectUtils.resolveFieldData(this.value, this.field) || '' : this.value) : '';
     this.inputFieldValue = formattedValue;
 
     if (this.inputEL && this.inputEL.nativeElement) {
@@ -614,6 +616,10 @@ export class TagAutocompleteComponent implements AfterViewInit, AfterViewChecked
     if (this.appendTo) {
       this.el.nativeElement.appendChild(this.panelEL.nativeElement);
     }
+  }
+
+  onTokenClick(event: MouseEvent, value: any): void {
+    this.tokenClick.emit({ originalEvent: event, value: value });
   }
 
 }
