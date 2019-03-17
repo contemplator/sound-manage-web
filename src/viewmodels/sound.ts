@@ -1,5 +1,3 @@
-import * as WaveSurfer from 'wavesurfer.js';
-
 export class Sound {
   id: string;
   name: string;
@@ -8,9 +6,8 @@ export class Sound {
   labels: string;
   labelClouds: string[];
   graph: any;
-  wave: any;
-  isPause: boolean;
-  isFinish: boolean;
+  price: number;
+  isPublic: number;
 
   constructor() {
     this.id = '';
@@ -41,6 +38,8 @@ export class Sound {
     this.labels = json.labels ? json.labels : '';
     this.labelClouds = this.labels.length > 0 ? this.labels.split(','): [];
     this.graph = json.graph;
+    this.price = json.price;
+    this.isPublic = json.isPublic;
     return this;
   }
 }

@@ -2,10 +2,9 @@
   <label>
     <span>搜尋檔案標籤</span>
     <input type="text" [(ngModel)]="keyword" (keyup.enter)="onKeywordChange()" pInputText>
-    <span *ngIf="showLoading">搜尋中...</span>
+    <span *ngIf="showLoading" class="searching">搜尋中...</span>
   </label>
-
-  <button class="btn-graph" (click)="updateAllGraph()" pButton label="更新所有音波圖"></button>
+  <!-- <button class="btn-graph" (click)="updateAllGraph()" pButton label="更新所有音波圖"></button> -->
 </div>
 
 <div class="file-table">
@@ -39,8 +38,13 @@
             <td *ngSwitchCase="'download'">
               <button (click)="onDownloadClick(rowData.url)" type="button" pButton label="下載"></button>
             </td>
+            <td *ngSwitchCase="'isPublic'">
+              <p-inputSwitch [(ngModel)]="rowData.isPublic" (onChange)="onPublicChange($event, rowData)"></p-inputSwitch>
+            </td>
+            <td *ngSwitchCase="'price'">
+              <input type="number" pInputText [(ngModel)]="rowData.price" [style.width]="'100%'" (blur)="onPriceBlur($event, rowData)">
+            </td>
             <td *ngSwitchCase="'graph'" class="graph-container">
-              <button class="btn btn-update" *ngIf="!rowData.graph || rowData.graph === 'null'" (click)="updateVoiceGraph($event, rowData)" type="button" pButton label="更新音波圖"></button>
               <button class="btn btn-play" pButton label="播放" (click)="play($event, rowData)" type="button" *ngIf="!rowData.wave"></button>
               <button class="btn btn-continue" pButton label="繼續播放" (click)="playPause($event, rowData)" type="button" *ngIf="rowData.wave && rowData.isPause && !rowData.isFinish"></button>
               <button class="btn btn-pause" pButton label="暫停" (click)="pause($event, rowData)" type="button" *ngIf="rowData.wave && !rowData.isPause && !rowData.isFinish"></button>

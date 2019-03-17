@@ -54,7 +54,6 @@ export class AppService {
     if (sound.labelClouds) {
       sound.labels = sound.labelClouds.length > 0 ? sound.labelClouds.join(',') : '';
     }
-    sound.wave = null;
     return this.httpClient.post<Sound>(`${this.host}sound/set`, sound);
   }
 

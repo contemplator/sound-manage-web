@@ -6,6 +6,11 @@
   }
 }
 
+.searching {
+  margin-left: 8px;
+  color: #888;
+}
+
 .file-table {
   ::ng-deep {
     .ui-table table {
@@ -26,9 +31,16 @@
     }
   }
 
+  td:nth-child(4),
+  td:nth-child(5),
+  td:nth-child(6) {
+    text-align: center;
+  }
+
   .graph-container {
     position: relative;
-    img{
+
+    img {
       width: 100%;
       height: 80px;
     }
@@ -53,7 +65,7 @@
     z-index: 1001;
   }
 
-  .btn-update{
+  .btn-update {
     position: absolute;
     top: 8px;
     left: 8px;

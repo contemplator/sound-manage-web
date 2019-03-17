@@ -3,16 +3,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
-
 import { TableModule } from 'primeng/table';
-import { ListComponent } from './list/list.component';
-
-import { InputTextModule, ButtonModule, SharedModule, FileUploadModule, MessageService, PanelModule, ListboxModule, AutoCompleteModule, BlockUIModule } from 'primeng/primeng';
+import { InputTextModule, ButtonModule, SharedModule, FileUploadModule, MessageService, PanelModule, ListboxModule, AutoCompleteModule, BlockUIModule, InputSwitchModule } from 'primeng/primeng';
 import { ToastModule } from 'primeng/toast';
+import { ListComponent } from './list/list.component';
 import { TagAutocompleteComponent } from './tag-autocomplete/tag-autocomplete.component';
 import { UploadComponent } from './upload/upload.component';
 import { IndexComponent } from './index/index.component';
@@ -43,7 +40,8 @@ import { LoadingComponent } from './loading/loading.component';
     ListboxModule,
     InputTextModule,
     AutoCompleteModule,
-    BlockUIModule
+    BlockUIModule,
+    InputSwitchModule
   ],
   providers: [
     AppService,
