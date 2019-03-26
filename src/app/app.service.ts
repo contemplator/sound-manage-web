@@ -7,7 +7,7 @@ import { FolderNode } from 'viewmodels/folder-node';
 
 @Injectable()
 export class AppService {
-  host = 'http://66.42.58.237/sound-manage-server/';
+  host = 'http://45.76.213.205/sound-manage-server/';
 
   constructor(
     private httpClient: HttpClient
