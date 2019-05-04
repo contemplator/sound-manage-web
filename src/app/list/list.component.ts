@@ -227,8 +227,8 @@ export class ListComponent implements OnInit {
 
       sound.wave = WaveSurfer.create({
         container: '#w' + sound.id,
-        waveColor: 'violet',
-        progressColor: 'purple',
+        waveColor: '#565656',
+        progressColor: '#0E0B16',
         height: 80
       });
 
