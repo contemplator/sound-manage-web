@@ -1,0 +1,18 @@
+.form-group-h {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+
+  label {
+    flex: 0 0 4.5em;
+    margin-right: 6px;
+  }
+
+  input {
+    flex: 1;
+  }
+}
+
+.modal-actions {
+  text-align: center;
+}

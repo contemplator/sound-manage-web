@@ -20,8 +20,9 @@ export class AppComponent implements OnInit {
 
   initNavigations(): void {
     this.navigationLinks = [
-      new NavigationLink('List', 'list'),
-      new NavigationLink('Upload', 'upload')
+      new NavigationLink('列表', 'list'),
+      new NavigationLink('管理分類', 'category'),
+      new NavigationLink('上傳新檔', 'upload')
       // new NavigationLink('Edit', 'edit')
     ];
   }

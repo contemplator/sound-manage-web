@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Sound } from 'viewmodels/sound';
 import { Tag } from 'viewmodels/tag';
 import { FolderNode } from 'viewmodels/folder-node';
+import { SoundCatrgory, AddSoundCatrgoryReq } from 'sound-manage-server/dist/models/sound';
 
 @Injectable()
 export class AppService {
@@ -93,7 +94,7 @@ export class AppService {
    * @param formData 檔案及表單內容
    */
   uploadFiles(formData): Observable<any> {
-    return this.httpClient.post('http://localhost:3000/sound-manage-server/sound/uploadFile', formData);
+    return this.httpClient.post(`${this.host}sound/uploadFile`, formData);
   }
 
   /**
@@ -101,5 +102,16 @@ export class AppService {
    */
   fetchFolders(): Observable<FolderNode> {
     return this.httpClient.get<FolderNode>(`${this.host}sound/fetchFolders`);
+  }
+
+  /**
+   * 取得音效分類列表
+   */
+  fetchSoundCatrgories(): Observable<SoundCatrgory[]> {
+    return this.httpClient.get<SoundCatrgory[]>(`${this.host}sound/fetchSoundCategories`);
+  }
+
+  addSoundCategory(req: AddSoundCatrgoryReq): Observable<boolean>{
+    return this.httpClient.post<boolean>(this.host + 'sound/addSoundCategory', req);
   }
 }

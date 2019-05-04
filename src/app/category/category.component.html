@@ -1,0 +1,41 @@
+<div class="btn-add-field">
+  <button pButton [label]="'新增分類'" (click)="showAddModal = true"></button>
+</div>
+
+<div class="category-table">
+  <p-table [columns]="cols" [value]="list" [scrollable]="true">
+    <ng-template pTemplate="colgroup" let-columns>
+      <colgroup>
+        <col *ngFor="let col of columns" [style.width]="col.width + 'em'">
+      </colgroup>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{ col.header }}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-columns="columns" let-rowData>
+      <tr>
+        <ng-container *ngFor="let col of columns">
+          <ng-container [ngSwitch]="col.field">
+            <td *ngSwitchCase="'sounds'">
+              <a>查看</a>
+            </td>
+            <td *ngSwitchDefault>{{ rowData[col.field] }}</td>
+          </ng-container>
+        </ng-container>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+      <tr>
+        <td [colSpan]="columns.length">
+          目前尚無分類
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<app-add-category-modal [(display)]="showAddModal" [maxSequence]="maxSequence" (add)="onAdd()"></app-add-category-modal>

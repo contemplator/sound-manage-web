@@ -32,6 +32,7 @@
     "primeicons": "^1.0.0",
     "primeng": "^7.1.0",
     "rxjs": "^6.4.0",
+    "sound-manage-server": "git+https://github.com/contemplator/woolito-server.git",
     "wavesurfer.js": "^2.0.5"
   },
   "devDependencies": {

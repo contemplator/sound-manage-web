@@ -1,19 +1,21 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
 import { TableModule } from 'primeng/table';
-import { InputTextModule, ButtonModule, SharedModule, FileUploadModule, MessageService, PanelModule, ListboxModule, AutoCompleteModule, BlockUIModule, InputSwitchModule } from 'primeng/primeng';
+import { InputTextModule, ButtonModule, SharedModule, FileUploadModule, MessageService, PanelModule, ListboxModule, AutoCompleteModule, BlockUIModule, InputSwitchModule, DialogModule } from 'primeng/primeng';
 import { ToastModule } from 'primeng/toast';
 import { ListComponent } from './list/list.component';
 import { TagAutocompleteComponent } from './tag-autocomplete/tag-autocomplete.component';
 import { UploadComponent } from './upload/upload.component';
 import { IndexComponent } from './index/index.component';
 import { LoadingComponent } from './loading/loading.component';
+import { CategoryComponent } from './category/category.component';
+import { AddCategoryModalComponent } from './category/add-category-modal/add-category-modal.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { LoadingComponent } from './loading/loading.component';
     TagAutocompleteComponent,
     UploadComponent,
     IndexComponent,
-    LoadingComponent
+    LoadingComponent,
+    CategoryComponent,
+    AddCategoryModalComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +45,9 @@ import { LoadingComponent } from './loading/loading.component';
     InputTextModule,
     AutoCompleteModule,
     BlockUIModule,
-    InputSwitchModule
+    InputSwitchModule,
+    DialogModule,
+    ReactiveFormsModule
   ],
   providers: [
     AppService,

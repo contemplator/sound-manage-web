@@ -1,0 +1,21 @@
+<p-dialog [visible]="display" [style]="{'width': '360px'}" [draggable]="false" [resizable]="false" [modal]="true" [dismissableMask]="true" (visibleChange)="displayChange.emit($event)">
+  <p-header>新增分類</p-header>
+
+  <form [formGroup]="form">
+    <div class="form-group-h">
+      <label>中文名稱</label>
+      <input type="text" formControlName="name" pInputText>
+    </div>
+
+    <div class="form-group-h">
+      <label>英文名稱</label>
+      <input type="text" formControlName="english_name" pInputText>
+    </div>
+  </form>
+
+  <p-footer>
+    <div class="modal-actions">
+      <button pButton [label]="'新增'" (click)="onAddClick()"></button>
+    </div>
+  </p-footer>
+</p-dialog>
