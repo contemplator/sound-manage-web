@@ -28,11 +28,21 @@
             <td *ngSwitchCase="'name'">
               {{rowData.name}}
             </td>
-            <td *ngSwitchCase="'modifyDatetime'">
+            <!-- <td *ngSwitchCase="'modifyDatetime'">
               {{showDatetime(rowData.modifyDatetime) | slice:0:10}}
-            </td>
+            </td> -->
             <td *ngSwitchCase="'labels'">
               <app-tag-autocomplete [(ngModel)]="rowData.labelClouds" [suggestions]="filtedLabelList" (completeMethod)="filterLabel($event)" placeholder="label" [multiple]="true" (onSelect)="onLabelAdd(rowData)" (onUnselect)="onLabelRemove($event, rowData)" (tokenClick)="onLabelClick($event)" [inputStyle]="{'width': '100%'}">
+              </app-tag-autocomplete>
+            </td>
+            <td *ngSwitchCase="'categories'">
+              <app-tag-autocomplete [(ngModel)]="rowData.categories" [suggestions]="filtedSoundCategoryList" (completeMethod)="filterCategory($event)" placeholder="category" [multiple]="true" (onSelect)="onSoundCategoryAdd($event, rowData)" (onUnselect)="onSoundCategoryDelete($event, rowData)" (tokenClick)="onSoundCategoryClick($event)" [inputStyle]="{'width': '100%'}">
+                <ng-template let-category pTemplate="item">
+                  {{ category.name }}
+                </ng-template>
+                <ng-template let-category pTemplate="selectedItem">
+                  <span class="sound-category">{{ category.name }}</span>
+                </ng-template>
               </app-tag-autocomplete>
             </td>
             <td *ngSwitchCase="'download'">

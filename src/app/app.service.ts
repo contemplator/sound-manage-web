@@ -36,7 +36,7 @@ export class AppService {
    * 關鍵字查詢音效
    * @param keyword 關鍵字
    * @param offset 起始
-   * @param limit 筆數 
+   * @param limit 筆數
    */
   fetchSounds(keyword: string, offset: number = 0, limit: number = 30): Observable<Sound[]> {
     const data = {
@@ -49,7 +49,7 @@ export class AppService {
 
   /**
    * 更新音效資訊
-   * @param sound 音效物件 
+   * @param sound 音效物件
    */
   updateSound(sound: Sound): Observable<Sound> {
     if (sound.labelClouds) {
@@ -111,7 +111,34 @@ export class AppService {
     return this.httpClient.get<SoundCatrgory[]>(`${this.host}sound/fetchSoundCategories`);
   }
 
-  addSoundCategory(req: AddSoundCatrgoryReq): Observable<boolean>{
+  /**
+   * 增加音效分類
+   */
+  addSoundCategory(req: AddSoundCatrgoryReq): Observable<boolean> {
     return this.httpClient.post<boolean>(this.host + 'sound/addSoundCategory', req);
+  }
+
+  /**
+   * 為音效匹配分類
+   */
+  addSoundCategoryMapping(sound_url: string, category_id: number): Observable<boolean> {
+    const req = {
+      sound_url: sound_url,
+      category_id: category_id
+    };
+    console.log(req);
+    return this.httpClient.post<boolean>(this.host + 'sound/addSoundCategoryMapping', req);
+  }
+
+  /**
+   * 為音效刪除匹配分類
+   */
+  deleteSoundCategoryMapping(sound_url: string, category_id: number): Observable<boolean> {
+    const req = {
+      sound_url: sound_url,
+      category_id: category_id
+    };
+    console.log(req);
+    return this.httpClient.post<boolean>(this.host + 'sound/deleteSoundCategoryMapping', req);
   }
 }

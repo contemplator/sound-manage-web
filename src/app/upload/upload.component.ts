@@ -26,13 +26,13 @@ export class UploadComponent implements OnInit {
 
   /**
    * 上傳檔案
-   * @param event 
+   * @param event
    */
   myUploader(event): void {
     const files = event.files;
     const formData: FormData = new FormData();
     for (let i = 0; i < files.length; i++) {
-      formData.append("files", files[i], files[i]['name']);
+      formData.append('files', files[i], files[i]['name']);
     }
 
     formData.set('dir', this.getCurDir());
@@ -44,7 +44,7 @@ export class UploadComponent implements OnInit {
 
   /**
    * 更新音波圖
-   * @param data 
+   * @param data
    */
   updateGraph(data: any): void {
     data.forEach(sound => {
@@ -65,9 +65,9 @@ export class UploadComponent implements OnInit {
           setTimeout(() => {
             const canvas = waveElement.querySelectorAll('canvas')[0];
             if (canvas.getContext) {
-              var image = canvas.toDataURL("image/png");
+              const image = canvas.toDataURL('image/png');
               sound.graph = image;
-              this.service.updateSound(sound).subscribe(res => {
+              this.service.updateSound(sound).subscribe(() => {
                 waveElement.innerHTML = '';
                 this.zone.run(() => {
                   this.messageService.add({ severity: 'success', summary: 'Success Message', detail: '已上傳至 Dropbox 並更新音波圖' });
@@ -126,7 +126,7 @@ export class UploadComponent implements OnInit {
     this.curFolderDir.push(node);
     if (node.children.length > 0) {
       this.folders.push(node.children);
-    }else{
+    } else {
       const emptyNode = new FolderNode(0, '無子資料夾', nodeLevel + 1);
       this.folders.push([emptyNode]);
     }

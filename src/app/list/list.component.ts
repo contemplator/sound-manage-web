@@ -31,6 +31,8 @@ export class ListComponent implements OnInit {
   rows = 30;                            // 資料一次撈取的筆數
   cols: any[] = [];                     // 表格欄位
   scrollHeight = '300px';
+  soundCategoryList: any[] = [];        // 音效分類列表
+  filtedSoundCategoryList: any[] = [];  // 篩選後音效分類列表
 
   constructor(
     private service: AppService,
@@ -48,18 +50,20 @@ export class ListComponent implements OnInit {
     this.fetchSoundsLoop();
     this.fetchLabelsList();
     this.initTableScrollHeight();
+    this.fetchSoundCategoryList();
   }
 
   initCols(): void {
     this.cols = [
       { field: 'name', header: '檔名', width: 15 },
-      { field: 'modifyDatetime', header: '更新時間', width: 6 },
+      // { field: 'modifyDatetime', header: '更新時間', width: 6 },
+      { field: 'categories', header: '分類', width: 15 },
       { field: 'labels', header: '標籤', width: 15 },
       { field: 'download', header: '下載', width: 5 },
       { field: 'isPublic', header: '公開', width: 5 },
       { field: 'price', header: '價格', width: 5 },
       { field: 'graph', header: '音源預覽', width: 30 },
-    ]
+    ];
   }
 
   initTableScrollHeight(): void {
@@ -83,6 +87,7 @@ export class ListComponent implements OnInit {
    */
   fetchSounds(): void {
     this.service.fetchSounds(this.keyword, this.soundList.length, this.rows).subscribe(res => {
+
       this.soundList = [...this.soundList, ...res.map(item => (new Sound()).parseFromDatabase(item))];
       if (this.firstTimeFetch === true) {
         this.firstTimeFetch = false;
@@ -99,6 +104,7 @@ export class ListComponent implements OnInit {
       } else {
         this.showLoading = false;
       }
+      console.log(this.soundList);
     });
   }
 
@@ -131,7 +137,7 @@ export class ListComponent implements OnInit {
    */
   onLabelRemove(event: any, sound: Sound): void {
     this.service.deleteLabel(sound.url, event).subscribe(res => {
-      console.info(res);
+
     });
   }
 
@@ -150,9 +156,9 @@ export class ListComponent implements OnInit {
    * @param res api 回傳的結果
    */
   downloadFile(res: any): void {
-    let link = window.document.createElement("a");
-    link.setAttribute("href", res);
-    link.setAttribute("download", res.name);
+    const link = window.document.createElement('a');
+    link.setAttribute('href', res);
+    link.setAttribute('download', res.name);
     link.click();
   }
 
@@ -180,7 +186,7 @@ export class ListComponent implements OnInit {
       } else {
         return false;
       }
-    })
+    });
     return index > -1 ? true : false;
   }
 
@@ -238,14 +244,14 @@ export class ListComponent implements OnInit {
         sound.isFinish = false;
 
         setTimeout(() => {
-          const waveElement = document.body.querySelector('#w' + sound.id);
+          // const waveElement = document.body.querySelector('#w' + sound.id);
           const canvas = waveElement.querySelectorAll('canvas')[0];
           if (canvas.getContext) {
-            var image = canvas.toDataURL("image/png");
+            const image = canvas.toDataURL('image/png');
             sound.graph = image;
             this.service.updateSound(sound).subscribe(res2 => {
             }, error => {
-              console.error(error, sound)
+              console.error(error, sound);
             });
           }
         }, 300);
@@ -332,15 +338,14 @@ export class ListComponent implements OnInit {
           setTimeout(() => {
             const canvas = waveElement.querySelectorAll('canvas')[0];
             if (canvas.getContext) {
-              var image = canvas.toDataURL("image/png");
+              const image = canvas.toDataURL('image/png');
               sound.graph = image;
-              this.service.updateSound(sound).subscribe(res => {
-                if (res) {
+              this.service.updateSound(sound).subscribe(updateRes => {
+                if (updateRes) {
                   resolve();
                 }
               }, error => {
                 console.error(error);
-                console.info(sound);
                 reject();
               });
             }
@@ -381,7 +386,7 @@ export class ListComponent implements OnInit {
    * 擷取部分資料顯示
    */
   loadChunk(index, length): Sound[] {
-    let chunk: Sound[] = [];
+    const chunk: Sound[] = [];
     for (let i = 0; i < length; i++) {
       chunk[i] = this.soundList[index + i];
     }
@@ -412,5 +417,47 @@ export class ListComponent implements OnInit {
     req.wave = null;
     req.isPublic = event.checked ? 1 : 0;
     this.service.updateSound(req).subscribe();
+  }
+
+  fetchSoundCategoryList(): void {
+    this.service.fetchSoundCatrgories().subscribe(res => {
+      console.log(res);
+      this.soundCategoryList = res;
+    });
+  }
+
+  filterCategory(event): void {
+    const keyword = event.query.toUpperCase();
+    this.filtedSoundCategoryList = this.soundCategoryList.filter(item => {
+      return item.name.toUpperCase().indexOf(keyword) > -1 ||
+        item.english_name.toUpperCase().indexOf(keyword) > -1;
+    });
+  }
+
+  /**
+   * 新增標籤
+   */
+  onSoundCategoryAdd(event: any, sound: SoundItem): void {
+    this.service.addSoundCategoryMapping(sound.url, event.id).subscribe(res => {
+
+    });
+  }
+
+  /**
+   * 刪除分類
+   */
+  onSoundCategoryDelete(event: any, sound: Sound): void {
+    console.log(event);
+    this.service.deleteSoundCategoryMapping(sound.url, event.id).subscribe(res => {
+
+    });
+  }
+
+  /**
+   * 點擊標籤
+   */
+  onSoundCategoryClick(event: { originalEvent: MouseEvent, value: any }): void {
+    this.keyword = event.value.name;
+    this.onKeywordChange();
   }
 }

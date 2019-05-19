@@ -8,6 +8,7 @@ export class Sound {
   graph: any;
   price: number;
   isPublic: number;
+  categories: SoundCategoryMappingInfo[];
 
   constructor() {
     this.id = '';
@@ -17,6 +18,7 @@ export class Sound {
     this.labels = '';
     this.labelClouds = [];
     this.graph = null;
+    this.categories = [];
   }
 
   parseFromDropbox(json: any) {
@@ -36,10 +38,20 @@ export class Sound {
     this.url = json.url;
     this.modifyDatetime = new Date(json.modifyDatetime);
     this.labels = json.labels ? json.labels : '';
-    this.labelClouds = this.labels.length > 0 ? this.labels.split(','): [];
+    this.labelClouds = this.labels.length > 0 ? this.labels.split(',') : [];
     this.graph = json.graph;
     this.price = json.price;
     this.isPublic = json.isPublic;
+    this.categories = json.categories;
     return this;
   }
+}
+
+// 音效的分類資料
+export class SoundCategoryMappingInfo {
+  sound_url: string;
+  cagetory_id: number;
+  name: string;
+  english_name: string;
+  sequence: number;
 }
