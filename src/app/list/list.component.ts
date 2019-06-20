@@ -55,14 +55,13 @@ export class ListComponent implements OnInit {
 
   initCols(): void {
     this.cols = [
-      { field: 'name', header: '檔名', width: 15 },
-      // { field: 'modifyDatetime', header: '更新時間', width: 6 },
+      { field: 'name', header: '檔名', width: 13 },
       { field: 'categories', header: '分類', width: 15 },
       { field: 'labels', header: '標籤', width: 15 },
       { field: 'download', header: '下載', width: 5 },
       { field: 'isPublic', header: '公開', width: 5 },
-      { field: 'price', header: '價格', width: 5 },
-      { field: 'graph', header: '音源預覽', width: 30 },
+      // { field: 'price', header: '價格', width: 5 },
+      { field: 'graph', header: '音源預覽', width: 24 }
     ];
   }
 
@@ -104,7 +103,6 @@ export class ListComponent implements OnInit {
       } else {
         this.showLoading = false;
       }
-      console.log(this.soundList);
     });
   }
 
