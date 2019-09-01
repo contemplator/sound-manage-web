@@ -48,7 +48,7 @@ export class UploadComponent implements OnInit {
    */
   updateGraph(data: any): void {
     data.forEach(sound => {
-      this.service.fetchDownloadLink(sound.id).subscribe(res => {
+      this.service.fetchDownloadLink(sound.url).subscribe(res => {
         const target = document.body.querySelector('#hidden-graph');
         const element = window.document.createElement('div');
         element.setAttribute('id', 'w' + sound.id);
@@ -67,6 +67,9 @@ export class UploadComponent implements OnInit {
             if (canvas.getContext) {
               const image = canvas.toDataURL('image/png');
               sound.graph = image;
+              sound.price = 0;
+              sound.is_public = 0;
+              sound.isPublic = 0;
               this.service.updateSound(sound).subscribe(() => {
                 waveElement.innerHTML = '';
                 this.zone.run(() => {
