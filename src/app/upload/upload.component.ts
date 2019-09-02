@@ -92,9 +92,9 @@ export class UploadComponent implements OnInit {
   fetchFolders(): void {
     this.service.fetchFolders().subscribe(res => {
       let curNode = res;
-      while (curNode.level < 4) {
+      while (curNode.level < 2) {
         this.curFolderDir.push(curNode);
-        if (curNode.level === 3) {
+        if (curNode.level === 1) {
           this.folders.push(curNode.children);
         }
         curNode = curNode.children[0];

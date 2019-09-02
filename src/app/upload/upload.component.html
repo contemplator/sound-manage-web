@@ -1,11 +1,5 @@
 <div class="choose-folder">
   <p-panel [header]="curFolderDir.length < 5 ? '請選擇上傳的位置' : '目前位置' + getCurDir()" [toggleable]="true">
-    <!-- <div class="path">
-      <span *ngFor="let item of curFolderDir">
-        <span class="path-name">{{item.name}}</span>
-        <span class="path-divider">/</span>
-      </span>
-    </div> -->
     <div class="folder-container">
       <div class="folder-level" *ngFor="let level of folders">
         <p-listbox [options]="level" optionLabel="name" (onChange)="onFolderClick($event)" [style]="{'height': '240px', 'overflow': 'auto'}" [disabled]="level[0].id === 0"></p-listbox>
