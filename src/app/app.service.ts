@@ -126,7 +126,6 @@ export class AppService {
       sound_url: sound_url,
       category_id: category_id
     };
-    console.log(req);
     return this.httpClient.post<boolean>(this.host + 'sound/addSoundCategoryMapping', req);
   }
 

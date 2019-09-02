@@ -300,7 +300,6 @@ export class ListComponent implements OnInit {
       const sound = remSounds[i];
       try {
         await this.uploadGraphBatch(sound);
-        console.log(sound.url);
       } catch (error) {
         console.error(error);
       }
@@ -326,8 +325,8 @@ export class ListComponent implements OnInit {
 
         sound.wave = WaveSurfer.create({
           container: '#ws' + sound.id,
-          waveColor: 'violet',
-          progressColor: 'purple',
+          waveColor: '#565656',
+          progressColor: '#0E0B16',
           height: 80
         });
 
@@ -410,7 +409,6 @@ export class ListComponent implements OnInit {
   }
 
   onPublicChange(event: { originalEvent: MouseEvent, checked: boolean }, sound: SoundItem): void {
-    console.log(event, sound);
     const req = Object.assign({}, sound);
     req.wave = null;
     req.isPublic = event.checked ? 1 : 0;
@@ -419,7 +417,6 @@ export class ListComponent implements OnInit {
 
   fetchSoundCategoryList(): void {
     this.service.fetchSoundCatrgories().subscribe(res => {
-      console.log(res);
       this.soundCategoryList = res;
     });
   }
@@ -445,7 +442,6 @@ export class ListComponent implements OnInit {
    * 刪除分類
    */
   onSoundCategoryDelete(event: any, sound: Sound): void {
-    console.log(event);
     this.service.deleteSoundCategoryMapping(sound.url, event.id).subscribe(res => {
 
     });

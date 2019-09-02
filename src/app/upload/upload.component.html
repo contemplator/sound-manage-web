@@ -8,7 +8,7 @@
   </p-panel>
 </div>
 
-<p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="myUploader($event)" multiple="multiple"></p-fileUpload>
+<p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="myUploader($event)" multiple="multiple" #upload></p-fileUpload>
 
 <p-toast position="bottom-left"></p-toast>
 

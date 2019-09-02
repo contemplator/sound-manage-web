@@ -1,6 +1,6 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild } from '@angular/core';
 import { AppService } from '../app.service';
-import { MessageService } from 'primeng/primeng';
+import { MessageService, FileUpload } from 'primeng/primeng';
 import * as WaveSurfer from 'wavesurfer.js';
 import { FolderNode } from 'viewmodels/folder-node';
 
@@ -10,7 +10,7 @@ import { FolderNode } from 'viewmodels/folder-node';
   styleUrls: ['./upload.component.scss']
 })
 export class UploadComponent implements OnInit {
-
+  @ViewChild('upload') upload: FileUpload;
   curFolderDir: FolderNode[] = []; // 目前的所選資料夾的路徑
   folders: FolderNode[][] = [];   // 目前顯示的各個 level 下資料夾
 
@@ -56,8 +56,8 @@ export class UploadComponent implements OnInit {
 
         sound.wave = WaveSurfer.create({
           container: '#w' + sound.id,
-          waveColor: 'violet',
-          progressColor: 'purple'
+          waveColor: '#565656',
+          progressColor: '#0E0B16',
         });
 
         sound.wave.on('ready', () => {
@@ -68,9 +68,8 @@ export class UploadComponent implements OnInit {
               const image = canvas.toDataURL('image/png');
               sound.graph = image;
               sound.price = 0;
-              sound.is_public = 0;
-              sound.isPublic = 0;
               this.service.updateSound(sound).subscribe(() => {
+                this.upload.clear();
                 waveElement.innerHTML = '';
                 this.zone.run(() => {
                   this.messageService.add({ severity: 'success', summary: 'Success Message', detail: '已上傳至 Dropbox 並更新音波圖' });

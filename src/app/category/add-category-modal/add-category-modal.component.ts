@@ -42,7 +42,6 @@ export class AddCategoryModalComponent implements OnInit {
     }
 
     this.addCategory();
-    console.log(this.form.value);
   }
 
   addCategory(): void {
